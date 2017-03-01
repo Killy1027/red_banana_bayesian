@@ -1,0 +1,60 @@
+---
+title: "Project_Bayesian_02271017"
+author: "Binhui Deng"
+date: "February 27, 2017"
+output: pdf_document
+---
+
+```{r}
+library(stppResid)
+data("redbanana")
+nrow(redbanana)
+max(redbanana$longitude)
+min(redbanana$longitude)
+max(redbanana$latitude)
+min(redbanana$latitude)
+1/0.0004
+```
+
+```{r}
+library(splancs)
+?kernel2d()
+library(MASS)
+?kde2d
+plot(redbanana$longitude,redbanana$latitude,xlim=range(redbanana$longitude),ylim=range(redbanana$latitude))
+
+density <- kde2d(redbanana$longitude,redbanana$latitude,n=100,lims=c(range(redbanana$longitude),range(redbanana$latitude)))
+image(density)
+z <- density$z
+diff(range(redbanana$latitude))*diff(range(redbanana$longitude))/(100^2)*sum(z)
+
+
+
+half.grid.length <- diff(density$x)[1]/2
+density$x - half.grid.length 
+# using less than 
+
+
+density.sum <- 0
+for (i in 1:nrow(redbanana))
+{
+ density.sum <- density.sum + z[longitude.location[i],latitude.location[i]]
+}
+density.sum
+```
+
+```{r}
+mu <- # take density for each point from density$z
+ti <- redbanana$birth
+xi <- redbanana$latitude
+yi <- redbanana$longitude
+loglikelihood <- function(x,y,t,p,alpha,beta)
+{
+ lambda <- (1-p)*mu/max(redbanana$birth) + (p*alpha*beta/pi)*sum(exp(-alpha*(t-ti)-beta*((x-xi)^2+(y-yi)^2)))
+ logl <- sum(log(lambda))-(1-p)*max(redbanana$birth)*density.sum-p*nrow(redbanana)
+}
+
+# when calculating loglikelihood, initialing t,x,y by myself?
+
+```
+
