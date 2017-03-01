@@ -32,7 +32,7 @@ diff(range(redbanana$latitude))*diff(range(redbanana$longitude))/(100^2)*sum(z)
 
 half.grid.length <- diff(density$x)[1]/2
 density$x - half.grid.length 
-# using less than 
+# using less than asdasdasdasdaasdas
 
 
 density.sum <- 0
