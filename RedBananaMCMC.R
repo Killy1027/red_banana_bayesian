@@ -1,50 +1,112 @@
 
 
-
-## log likelihood function
-llike <- function(x, y, t, alpha, beta, p){
+#======================================
+#======================================
+# log likelihood function
+#======================================
+#======================================
+llike <- function(x, y, t, a, b, p){
   
 }
 
 
-RedBananaMCMC <- function(x,y,t, iters=1000){
+#======================================
+#======================================
+# MCMC Sampler
+#======================================
+#======================================
+RedBananaMCMC <- function(x, y, t,
+                          iters = 1000, burn = iters/2, thin = 1,
+                          prior.sd.a = 100, prior.sd.b = 100){
   
   
   #======================================
   # Initial values
   #======================================
-  
-  
-  changes here blahblahblah
+  a <- rnorm(1, 0, prior.sd.a)
+  b <- rnorm(1, 0, prior.sd.b)
+  p <- runif(1)
+  ll <- llike(x, y, t, a, b, p)
   
   #======================================
-  # Start MCMC
+  # Keepers
+  #======================================
+  keep.pars <- matrix(0, iters, 3)
+  colnames(keep.pars) <- c("a", "b", "p")
+  keep.ll <- rep(0, iters)
+  
+  #======================================
+  # START MCMC!!!
   #======================================
   for(i in 1:iters){
+    for(j in 1:thin){
+      
+      
+      #__________________________________
+      # Update a
+      #
+      cana <- rnorm(1, a, 1)
+      canll <- llike(x, y, t, cana, b, p)
+      R <- sum(canll - ll) + dnorm(cana, 0, prior.sd.a) - dnorm(a, 0, prior.sd.a)
+      if(log(runif(1)) < R){
+        a <- cana
+        ll <-  canll
+      }
+      
+      #__________________________________
+      # Update b
+      #
+      canb <- rnorm(1, b, 1)
+      canll <- llike(x, y, t, b, canb, p)
+      R <- sum(canll - ll) + dnorm(canb, 0, prior.sd.b) - dnorm(a, 0, prior.sd.b)
+      if(log(runif(1)) < R){
+        b <- canb
+        ll <-  canll
+      }
+      
+      #__________________________________
+      # Update p
+      #
+      canp <- rbeta(1, p/(1-p), 1)
+      canll <- llike(x, y, t, a, b, canp)
+      R <- sum(canll - ll) + dbeta(canp, p/(1-p), 1) - dbeta(p, canp/(1-canp), 1)
+      if(log(runif(1)) < R){
+        p <- canp
+        ll <-  canll
+      }
+    
+
+    }##end thin
     
     
     #======================================
-    # Update alpha
+    # Keepers
     #======================================
-    
-    
-    
-    
-    #======================================
-    # Update beta
-    #======================================
-    
-    
-    
+    keep.pars[i,] <- c(a,b,p)
+    keep.ll[i] <- ll
     
     #======================================
-    # Update p
+    # Plots
     #======================================
+    if(iters%%100==0){
+      par(mfrow=c(3,2)){
+        plot(keep.pars[1:i,1], type = "s", main = "a")
+        plot(keep.pars[1:i,2], type = "s", main = "a")
+        plot(keep.pars[1:i,3], type = "s", main = "a")
+        plot(keep.ll[1:i], type = "s", main = "log-likelihood")
+      }
+    }
     
     
-  }
+  }##end mcmc
   
   
+  #======================================
+  # Output
+  #======================================
+  
+  return(list(pars = keep.pars,
+              ll   = keep.ll))
   
   
 }
