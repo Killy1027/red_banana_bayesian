@@ -67,9 +67,9 @@ RedBananaMCMC <- function(x, y, t,
       #__________________________________
       # Update p
       #
-      canp <- rbeta(1, p/(1-p), 1)
+      canp <- rbeta(1, p, 1-p)
       canll <- llike(x, y, t, a, b, canp)
-      R <- sum(canll - ll) + dbeta(canp, p/(1-p), 1) - dbeta(p, canp/(1-canp), 1)
+      R <- sum(canll - ll) + dbeta(canp, p, 1-p) - dbeta(p, canp, 1-canp)
       if(log(runif(1)) < R){
         p <- canp
         ll <-  canll
@@ -91,8 +91,8 @@ RedBananaMCMC <- function(x, y, t,
     if(iters%%100==0){
       par(mfrow=c(3,2)){
         plot(keep.pars[1:i,1], type = "s", main = "a")
-        plot(keep.pars[1:i,2], type = "s", main = "a")
-        plot(keep.pars[1:i,3], type = "s", main = "a")
+        plot(keep.pars[1:i,2], type = "s", main = "b")
+        plot(keep.pars[1:i,3], type = "s", main = "p")
         plot(keep.ll[1:i], type = "s", main = "log-likelihood")
       }
     }
