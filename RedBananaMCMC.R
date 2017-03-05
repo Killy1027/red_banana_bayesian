@@ -57,7 +57,7 @@ RedBananaMCMC <- function(x, y, t,
       # Update b
       #
       canb <- rnorm(1, b, 1)
-      canll <- llike(x, y, t, b, canb, p)
+      canll <- llike(x, y, t, a, canb, p)
       R <- sum(canll - ll) + dnorm(canb, 0, prior.sd.b) - dnorm(a, 0, prior.sd.b)
       if(log(runif(1)) < R){
         b <- canb
