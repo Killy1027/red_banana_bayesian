@@ -1,0 +1,141 @@
+---
+title: "Project_Bayesian"
+author: "Binhui Deng"
+date: "February 27, 2017"
+output: pdf_document
+---
+
+```{r}
+library(stppResid)
+data("redbanana")
+```
+
+```{r}
+# Calculating the kernel density for redbanan trees in square grids
+library(MASS)
+plot(redbanana$longitude,redbanana$latitude,xlim=range(redbanana$longitude),ylim=range(redbanana$latitude))
+density <- kde2d(redbanana$longitude,redbanana$latitude,n=100,lims=c(range(redbanana$longitude),range(redbanana$latitude)))
+image(density)
+z <- density$z
+# To prove that the volume of density function equals 1
+diff(range(redbanana$latitude))*diff(range(redbanana$longitude))/(100^2)*sum(z)
+# Move those x's and y's to proper locations, crosses of grids.
+half.grid.x <- diff(density$x)[1]/2
+half.grid.y <- diff(density$y)[1]/2
+new.x <- c(density$x - half.grid.x, density$x[100] + half.grid.x)
+new.y <- c(density$y - half.grid.y, density$y[100] + half.grid.y)
+# Calculating the corresponding position in grids
+longitude.location <- latitude.location <- NULL
+for (i in 1:nrow(redbanana))
+{
+ longitude.location[i] <- sum(redbanana$longitude[i] < new.x)
+ latitude.location[i] <- sum(redbanana$latitude[i] < new.y)
+}
+# To test if vectors contain a value of 0. (impossible number)
+0 %in% longitude.location
+0 %in% latitude.location
+
+density.sum <- 0
+for(i in 1:nrow(redbanana))
+{
+ density.sum <- density.sum + z[longitude.location[i],latitude.location[i]]
+}
+density.sum
+```
+
+```{r}
+loglikelihood <- function(x,y,t,a,b,p)
+{
+ lambda <- list()
+ mu1 <- z[sum(x[1]<new.x),sum(y[1]<new.y)]
+ lambda[1] <- (1-p)*mu1/max(t)
+ for(i in 2:length(t))
+ {
+  mu <- z[sum(x[i]<new.x),sum(y[i]<new.y)]
+  #====================================
+  # There is sth. wrong with belowing code!!!!   each element results -Inf.
+  #====================================
+  lambda[i] <- (1-p)*mu/max(t)+p*sum((a*b/pi)*exp(-a*(t[i]-t[1:(i-1)])-b*((x[i]-x[1:(i-1)])^2+(y[i]-y[1:(i-1)])^2)))
+ }
+  sum(log(lambda))-(1-p)*max(t)*density.sum-p*length(t)
+}
+```
+
+```{r}
+RedBananaMCMC <- function(x,y,t,iters=1000,burn=iters/2,thin=1,prior.sd.a=100,prior.sd.b=100)
+{
+  # Initial values
+  a <- rnorm(1, 0, prior.sd.a)
+  b <- rnorm(1, 0, prior.sd.b)
+  p <- runif(1)
+  curll <- loglikelihood(x, y, t, a, b, p)
+  # Keepers
+  keep.pars <- matrix(0, iters, 3)
+  colnames(keep.pars) <- c("a", "b", "p")
+  keep.ll <- rep(0, iters)
+  # START MCMC!!!
+  for(i in 1:iters)
+  {
+    for(j in 1:thin)
+    {
+      # Update a
+      cana <- rnorm(1, a, 1)
+      canll <- loglikelihood(x, y, t, cana, b, p)
+      Ratio.a <- sum(canll - curll) + dnorm(cana, 0, prior.sd.a) - dnorm(a, 0, prior.sd.a)
+      if(log(runif(1)) < Ratio.a)
+      {
+        a <- cana
+        curll <- canll
+      }
+      
+      # Update b
+      canb <- rnorm(1, b, 1)
+      canll <- loglikelihood(x, y, t, a, canb, p)
+      Ratio.b <- sum(canll - curll) + dnorm(canb, 0, prior.sd.b) - dnorm(a, 0, prior.sd.b)
+      if(log(runif(1)) < Ratio.b)
+      {
+        b <- canb
+        curll <- canll
+      }
+      
+      # Update p
+      canp <- rbeta(1, p, 1-p)
+      canll <- loglikelihood(x, y, t, a, b, canp)
+      Ratio.p <- sum(canll - curll) + dbeta(canp, p, 1-p) - dbeta(p, canp, 1-canp)
+      if(log(runif(1)) < Ratio.p)
+      {
+        p <- canp
+        curll <-  canll
+      }
+      
+    }##end thin
+    
+    # Keepers
+    keep.pars[i,] <- c(a,b,p)
+    keep.ll[i] <- curll
+    # Plots
+    if(i%%100==0)
+    {
+      par(mfrow=c(3,2))
+      {
+        plot(keep.pars[1:i,1], type = "s", main = "a")
+        plot(keep.pars[1:i,2], type = "s", main = "b")
+        plot(keep.pars[1:i,3], type = "s", main = "p")
+        plot(keep.ll[1:i], type = "s", main = "log-likelihood")
+      }
+    }
+  }##end mcmc
+
+  # Output
+  return(list(pars=keep.pars,ll=keep.ll))
+}
+
+```
+
+```{r}
+x <- redbanana$longitude
+y <- redbanana$latitude
+t <- redbanana$birth
+RedBananaMCMC(x,y,t)
+```
+
