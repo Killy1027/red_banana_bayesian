@@ -101,7 +101,7 @@ RedBananaMCMC <- function(x,y,t,iters=1000,burn=iters/2,thin=1,prior.sd.a=100,pr
       # Update p
       canp <- rbeta(1, p, 1-p)
       canll <- loglikelihood(x, y, t, a, b, canp)
-      Ratio.p <- sum(canll - curll) + dbeta(canp, p, 1-p) - dbeta(p, canp, 1-canp)
+      Ratio.p <- sum(canll - curll) + dbeta(p, canp, 1-canp) - dbeta(canp, p, 1-p)
       if(log(runif(1)) < Ratio.p)
       {
         p <- canp
