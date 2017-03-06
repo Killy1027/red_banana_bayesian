@@ -1,10 +1,33 @@
 
 
+
 #======================================
 #======================================
 # log likelihood function
 #======================================
 #======================================
+
+
+
+
+
+
+llike <- function(x, y, t, a, b, p){
+  
+  mu1 <- rep(z[sum(x[1] < new.x), sum(y[1] < new.y)], NROW(x))
+  lambda[1] <- (1-p)*mu1/max(t)
+  for(i in 2:length(t))
+  {
+    mu <- z[sum(x[i]<new.x),sum(y[i]<new.y)]
+    #====================================
+    # There is sth. wrong with belowing code!!!!   each element results -Inf.
+    #====================================
+    lambda[i] <- (1-p)*mu[i] p*sum((a*b/pi)*exp(-a*iet[1:(i-1),i] - b*ied2[1:(i-1),i])
+  }
+  sum(log(lambda))-(1-p)*max(t)*density.sum-p*length(t)
+}
+
+
 llike <- function(x, y, t, a, b, p){
   
 }

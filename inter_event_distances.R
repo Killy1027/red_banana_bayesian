@@ -16,9 +16,8 @@ xy <- coordinates(xy)
 
 # Calculate inter-event distances
 library(fields)
-ied.mat <- rdist(xy) #distances in meters
-ied2.mat <- ied.mat^2 #squared distances
-
+ied <- rdist(xy) #distances in meters
+ied2 <- ied^2 #squared distances
 
 
 #======================================
@@ -26,4 +25,4 @@ ied2.mat <- ied.mat^2 #squared distances
 # (units are in weeks)
 #======================================
 
-iet.mat <- rdist(redbanana$birth)
+iet <- rdist(redbanana$birth)
