@@ -44,18 +44,36 @@ density.sum
 ```
 
 ```{r}
+# Creating  t[i]-t[1:(i-1)]    x[i]-x[1:(i-1)])^2+(y[i]-y[1:(i-1)])^2)
+
+mu1 <- z[sum(x[1]<new.x),sum(y[1]<new.y)]
+lambda[1] <- (1-p)*mu1/max(t)
+
+time <- dist <- mu <- NULL
+for (i in 2:length(t))
+{
+  mu[i] <- z[sum(x[i]<new.x),sum(y[i]<new.y)]
+  time[i] <- t[i]-t[1:(i-1)]
+  dist[i] <- (x[i]-x[1:(i-1)])^2 + (y[i]-y[1:(i-1)])^2
+}
+  
+```
+
+
+```{r}
+part1 <- part2 <- part3 <- part4 <- NULL
 loglikelihood <- function(x,y,t,a,b,p)
 {
- lambda <- list()
- mu1 <- z[sum(x[1]<new.x),sum(y[1]<new.y)]
- lambda[1] <- (1-p)*mu1/max(t)
  for(i in 2:length(t))
  {
-  mu <- z[sum(x[i]<new.x),sum(y[i]<new.y)]
+  part1[i] <- (1-p)*mu[i]/max(t)
+  part2[i] <- p*a*b/pi
+  part3[i] <- exp(-a*(time[i]))
+  part4[i] <- exp(b*(dist[i]))
   #====================================
   # There is sth. wrong with belowing code!!!!   each element results -Inf.
   #====================================
-  lambda[i] <- (1-p)*mu/max(t)+p*sum((a*b/pi)*exp(-a*(t[i]-t[1:(i-1)])-b*((x[i]-x[1:(i-1)])^2+(y[i]-y[1:(i-1)])^2)))
+  lambda[i] <- part1[i] + part2[i] * sum(part3[i] / part4[i])
  }
   sum(log(lambda))-(1-p)*max(t)*density.sum-p*length(t)
 }
@@ -80,6 +98,12 @@ RedBananaMCMC <- function(x,y,t,iters=1000,burn=iters/2,thin=1,prior.sd.a=100,pr
     {
       # Update a
       cana <- rnorm(1, a, 1)
+      {
+       part2 <- p*cana*b/pi
+       
+      }
+      
+      
       canll <- loglikelihood(x, y, t, cana, b, p)
       Ratio.a <- sum(canll - curll) + dnorm(cana, 0, prior.sd.a) - dnorm(a, 0, prior.sd.a)
       if(log(runif(1)) < Ratio.a)
@@ -101,7 +125,7 @@ RedBananaMCMC <- function(x,y,t,iters=1000,burn=iters/2,thin=1,prior.sd.a=100,pr
       # Update p
       canp <- rbeta(1, p, 1-p)
       canll <- loglikelihood(x, y, t, a, b, canp)
-      Ratio.p <- sum(canll - curll) + dbeta(canp, p, 1-p) - dbeta(p, canp, 1-canp)
+      Ratio.p <- sum(canll - curll) + dbeta(p, canp, 1-canp) - dbeta(canp, p, 1-p)
       if(log(runif(1)) < Ratio.p)
       {
         p <- canp
@@ -137,5 +161,12 @@ x <- redbanana$longitude
 y <- redbanana$latitude
 t <- redbanana$birth
 RedBananaMCMC(x,y,t)
+```
+
+```{r}
+qqq <- c(seq(1,3,length.out=2))
+www <- c(seq(2,4,length.out=2))
+sum(exp(qqq-www))
+sum(exp(qqq)) / sum(exp(www))
 ```
 
