@@ -6,19 +6,35 @@ output: pdf_document
 ---
 
 ```{r}
-library(stppResid)
+#======================================
+# Get interevent distances 
+# (units are in meters)
+#======================================
+
+# Transform from lon/lat coordinates to Euclidean x/y coordinates
+require(stppResid)
 data("redbanana")
+lonlat <- SpatialPoints(coords = redbanana[,1:2])
+proj4string(lonlat) <- CRS("+proj=longlat +datum=WGS84")
+
+# Projection for Costa Rica
+xyproj <- "+proj=utm +zone=17 +ellps=WGS84"
+xy <- spTransform(lonlat, CRS(xyproj))
+xy <- coordinates(xy)
+
+# minish the value
+#  xy <- xy/1000
 ```
 
 ```{r}
 # Calculating the kernel density for redbanan trees in square grids
 library(MASS)
-plot(redbanana$longitude,redbanana$latitude,xlim=range(redbanana$longitude),ylim=range(redbanana$latitude))
-density <- kde2d(redbanana$longitude,redbanana$latitude,n=100,lims=c(range(redbanana$longitude),range(redbanana$latitude)))
+plot(xy[,1],xy[,2],xlim=range(xy[,1]),ylim=range(xy[,2]))
+density <- kde2d(xy[,1],xy[,2],n=100,lims=c(range(xy[,1]),range(xy[,2])))
 image(density)
 z <- density$z
 # To prove that the volume of density function equals 1
-diff(range(redbanana$latitude))*diff(range(redbanana$longitude))/(100^2)*sum(z)
+diff(range(xy[,2]))*diff(range(xy[,1]))/(100^2)*sum(z)
 # Move those x's and y's to proper locations, crosses of grids.
 half.grid.x <- diff(density$x)[1]/2
 half.grid.y <- diff(density$y)[1]/2
@@ -26,57 +42,54 @@ new.x <- c(density$x - half.grid.x, density$x[100] + half.grid.x)
 new.y <- c(density$y - half.grid.y, density$y[100] + half.grid.y)
 # Calculating the corresponding position in grids
 longitude.location <- latitude.location <- NULL
-for (i in 1:nrow(redbanana))
+for (i in 1:nrow(xy))
 {
- longitude.location[i] <- sum(redbanana$longitude[i] < new.x)
- latitude.location[i] <- sum(redbanana$latitude[i] < new.y)
+  longitude.location[i] <- sum(xy[,1][i] < new.x)
+  latitude.location[i] <- sum(xy[,2][i] < new.y)
 }
 # To test if vectors contain a value of 0. (impossible number)
 0 %in% longitude.location
 0 %in% latitude.location
 
 density.sum <- 0
-for(i in 1:nrow(redbanana))
+for(i in 1:nrow(xy))
 {
- density.sum <- density.sum + z[longitude.location[i],latitude.location[i]]
+  density.sum <- density.sum + z[longitude.location[i],latitude.location[i]]
 }
 density.sum
 ```
 
 ```{r}
-# Creating  t[i]-t[1:(i-1)]    x[i]-x[1:(i-1)])^2+(y[i]-y[1:(i-1)])^2)
+# 
+#  mu <- NULL
+#  time <- dist <- list()
+#  for (i in 2:length(t))
+#   {
+#    mu[i] <- z[sum(x[i]<new.x),sum(y[i]<new.y)]
+#    time[[i]] <- t[i]-t[1:(i-1)]
+#    dist[[i]] <- (x[i]-x[1:(i-1)])^2 + (y[i]-y[1:(i-1)])^2
+#   }
 
-mu1 <- z[sum(x[1]<new.x),sum(y[1]<new.y)]
-lambda[1] <- (1-p)*mu1/max(t)
 
-time <- dist <- mu <- NULL
-for (i in 2:length(t))
-{
-  mu[i] <- z[sum(x[i]<new.x),sum(y[i]<new.y)]
-  time[i] <- t[i]-t[1:(i-1)]
-  dist[i] <- (x[i]-x[1:(i-1)])^2 + (y[i]-y[1:(i-1)])^2
-}
+#  loglikelihood <- function(x,y,t,a,b,p)
+#  {
+#   lambda <- NULL
+#   mu[1] <- z[sum(x[1]<new.x),sum(y[1]<new.y)]
+#   lambda[1] <- (1-p)*mu[1]/max(t)
+ 
+#   part1 <- part2 <- NULL
+#   part3 <- part4 <- list()
+#   for (i in 2:length(t))
+#   {
+#    part1[i] <- (1-p)*mu[i]/max(t)
+#    part2 <- p*a*b/pi
   
-```
-
-
-```{r}
-part1 <- part2 <- part3 <- part4 <- NULL
-loglikelihood <- function(x,y,t,a,b,p)
-{
- for(i in 2:length(t))
- {
-  part1[i] <- (1-p)*mu[i]/max(t)
-  part2[i] <- p*a*b/pi
-  part3[i] <- exp(-a*(time[i]))
-  part4[i] <- exp(b*(dist[i]))
-  #====================================
-  # There is sth. wrong with belowing code!!!!   each element results -Inf.
-  #====================================
-  lambda[i] <- part1[i] + part2[i] * sum(part3[i] / part4[i])
- }
-  sum(log(lambda))-(1-p)*max(t)*density.sum-p*length(t)
-}
+#    part3[[i]] <- exp(-a*time[[i]])
+#    part4[[i]] <- exp(b*dist[[i]])
+#    lambda[i] <- part1[i] + part2 * sum(part3[[i]] / part4[[i]])
+#   }
+#    sum(log(lambda))-(1-p)*max(t)*density.sum-p*length(t)
+#  }
 ```
 
 ```{r}
@@ -86,25 +99,58 @@ RedBananaMCMC <- function(x,y,t,iters=1000,burn=iters/2,thin=1,prior.sd.a=100,pr
   a <- rnorm(1, 0, prior.sd.a)
   b <- rnorm(1, 0, prior.sd.b)
   p <- runif(1)
-  curll <- loglikelihood(x, y, t, a, b, p)
+  #================================
+  # calculating some fixed values
+  #================================
+  mu <- NULL
+  time <- dist <- list()
+  for (i in 2:length(t))
+ {
+  mu[i] <- z[sum(x[i]<new.x),sum(y[i]<new.y)]
+  time[[i]] <- t[i]-t[1:(i-1)]
+  dist[[i]] <- (x[i]-x[1:(i-1)])^2 + (y[i]-y[1:(i-1)])^2
+  }
+  #================================
+  # calculating log-likelihood
+  #================================
+  lambda <- NULL
+  mu[1] <- z[sum(x[1]<new.x),sum(y[1]<new.y)]
+  lambda[1] <- (1-p)*mu[1]/max(t)
+  
+  part1 <- part2 <- NULL
+  part3 <- part4 <- list()
+  for (i in 2:length(t))
+ {
+  part1[i] <- (1-p)*mu[i]/max(t)
+  part2 <- p*a*b/pi
+  # PROBLEMS!!!: big positive or negative "a" times big "time[[i]]" makes exp() Inf or 0
+  part3[[i]] <- exp(-a*time[[i]])
+  # Same problem as above
+  part4[[i]] <- exp(b*dist[[i]])
+  lambda[i] <- part1[i] + part2 * sum(part3[[i]] / part4[[i]])
+ }
+  curll <- sum(log(lambda))-(1-p)*max(t)*density.sum-p*length(t)
+  
   # Keepers
   keep.pars <- matrix(0, iters, 3)
   colnames(keep.pars) <- c("a", "b", "p")
   keep.ll <- rep(0, iters)
+  #================================
   # START MCMC!!!
+  #================================
   for(i in 1:iters)
   {
     for(j in 1:thin)
     {
       # Update a
       cana <- rnorm(1, a, 1)
+      part2 <- p*cana*b/pi 
+      for(k in 2:length(t))
       {
-       part2 <- p*cana*b/pi
-       
+       part3[[k]] <- exp(-cana*time[[k]])
+       lambda[k] <- part1[k] + part2 * sum(part3[[k]] / part4[[k]])
       }
-      
-      
-      canll <- loglikelihood(x, y, t, cana, b, p)
+      canll <- sum(log(lambda))-(1-p)*max(t)*density.sum-p*length(t)
       Ratio.a <- sum(canll - curll) + dnorm(cana, 0, prior.sd.a) - dnorm(a, 0, prior.sd.a)
       if(log(runif(1)) < Ratio.a)
       {
@@ -114,7 +160,13 @@ RedBananaMCMC <- function(x,y,t,iters=1000,burn=iters/2,thin=1,prior.sd.a=100,pr
       
       # Update b
       canb <- rnorm(1, b, 1)
-      canll <- loglikelihood(x, y, t, a, canb, p)
+      part2 <- p*a*canb/pi 
+      for(m in 2:length(t))
+      {
+       part4[[m]] <- exp(canb*dist[[m]])
+       lambda[m] <- part1[m] + part2 * sum(part3[[m]] / part4[[m]])
+      }
+      canll <- sum(log(lambda))-(1-p)*max(t)*density.sum-p*length(t)
       Ratio.b <- sum(canll - curll) + dnorm(canb, 0, prior.sd.b) - dnorm(a, 0, prior.sd.b)
       if(log(runif(1)) < Ratio.b)
       {
@@ -124,7 +176,14 @@ RedBananaMCMC <- function(x,y,t,iters=1000,burn=iters/2,thin=1,prior.sd.a=100,pr
       
       # Update p
       canp <- rbeta(1, p, 1-p)
-      canll <- loglikelihood(x, y, t, a, b, canp)
+      lambda[1] <- (1-canp)*mu[1]/max(t)
+      part2 <- canp*a*b/pi 
+      for(n in 2:length(t))
+      {
+       part1[n] <- (1-canp)*mu[n]/max(t)
+       lambda[n] <- part1[n] + part2 * sum(part3[[n]] / part4[[n]])
+      }
+      canll <- sum(log(lambda))-(1-canp)*max(t)*density.sum-canp*length(t)
       Ratio.p <- sum(canll - curll) + dbeta(p, canp, 1-canp) - dbeta(canp, p, 1-p)
       if(log(runif(1)) < Ratio.p)
       {
@@ -157,16 +216,13 @@ RedBananaMCMC <- function(x,y,t,iters=1000,burn=iters/2,thin=1,prior.sd.a=100,pr
 ```
 
 ```{r}
-x <- redbanana$longitude
-y <- redbanana$latitude
+x <- xy[,1]
+y <- xy[,2]
 t <- redbanana$birth
+
 RedBananaMCMC(x,y,t)
 ```
 
-```{r}
-qqq <- c(seq(1,3,length.out=2))
-www <- c(seq(2,4,length.out=2))
-sum(exp(qqq-www))
-sum(exp(qqq)) / sum(exp(www))
-```
+
+
 
