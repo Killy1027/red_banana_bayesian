@@ -42,11 +42,11 @@ RedBananaMCMC <- function(xy, t, bg,
   b <- rgamma(1, prior.shape.b, prior.rate.b)
   p <- runif(1)
   
-  # Get interevent times 
+  # Get interevent times
   iet <- rdist(t)
   iet[lower.tri(iet, diag = T)] <- NA
   
-  # Get interevent squared distances (in meters^2)
+  # Get interevent squared distances
   ied <- rdist(xy)
   ied2 <- ied^2
   ied2[lower.tri(ied2, diag = T)] <- NA
