@@ -374,6 +374,7 @@
 
 %\usebackgroundtemplate{\includegraphics[width=\paperwidth]{nantucket127-points-terrain.png}} %optional background image
 \begin{frame}
+
 \vskip1ex
 \begin{columns}
 %=============================================================%
@@ -395,12 +396,10 @@
 %=============================================================%
 	
 \begin{itemize}
-		\item \textbf{Need:} Effective modeling methods for \red{zero-inflated} and/or \red{over-dispersed} count data.
-		\begin{center}
-			\vspace{-0.5cm}
-		\end{center}
-        \item \textbf{Goal:} Develop a package of user-friendly functions, utilizing \red{MCMC sampling}, that will best model problematic count data that cannot be fit to any typical distribution.
-	\end{itemize}
+	\item \textbf{Need:} Effective modeling methods for \red{zero-inflated} and/or \red{over-dispersed} count data.
+  \vspace{0.75cm}
+  \item \textbf{Goal:} Develop a package of user-friendly functions, utilizing \red{MCMC sampling}, that will best model problematic count data that cannot be fit to any typical distribution.
+\end{itemize}
 	%\begin{center}
 	\vspace{-0.25cm}
 	%\end{center}
@@ -408,15 +407,14 @@
 \end{block}
 \vfill
 
+
 %=============================================================%
 \begin{block}{Discription}
 %=============================================================%
 	
 \begin{itemize}
 	\item \textbf{hurdle(...):} Used to fit single or double-hurdle regression models to count data via \red{Bayesian inference}.
-	\begin{center}
-		\vspace{-0.5cm}
-	\end{center}
+  \vspace{0.75cm}
 	\item \textbf{hurdle\textunderscore control(...):} Various parameters for fitting control of \red{hurdle model} regression.
 \end{itemize}
 	%\begin{center}
@@ -472,9 +470,7 @@
 		\item \textbf{plots:} logical operator. \red{TRUE} to print plots. 
 		\item \textbf{progress.bar:} logical operator. \red{TRUE} to print progress bar. 
 	\end{itemize}
-	\begin{center}
-		\vspace{-0.5cm}
-	\end{center}
+  \vspace{0.75cm}
 	\item \textbf{hurdle\textunderscore control(...)}
 	\begin{itemize}
 		\item \textbf{a:} shape parameter for Gamma($a$, $b$) prior distributions.
@@ -627,14 +623,13 @@
 	\begin{itemize}
 		\item \red{Single-Hurdle modeling} is used to fit \red{zero-inflated} data.
 	\end{itemize}
-	
 	%\item 
 	{\bf Likelihood of observing count $y_{i}$:}
 	%\end{itemize}
 	\beqx
-	f(y_{i} | \blue{\btheta}) = 
+	f\paren{y_{i} \cond \blue{\btheta}} = 
 	\begin{cases}
-		\blue{p_{i}}, &  y_{i}=0,\\
+		\blue{p_{i}}, & y_{i}=0,\\
 		{[1-p_{i}] \cdot\NB(\blue{\mu_{i}}, r)}, & 1\le y_{ij} < \psi,\\
 
 	\end{cases}
