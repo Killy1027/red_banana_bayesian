@@ -117,7 +117,11 @@ if(F){
   theta = c(.076, .029, .577)
   theta = c(.3, 20, .96)
   sim1 <- sim_rb_etas(theta, 194.5509, bg)
-  plot(cbind(sim1$lon,sim1$lat),xlim=range(bg$x),ylim=range(bg$y),pch=".")
+  par(mfrow=c(1,2))
+  plot(sim1$pts,xlim=range(bg$x),ylim=range(bg$y), pch=".",main="simulation")
+  plot(redbanana$longitude,redbanana$latitude,pch=".",main="observed")
+  
+  library(ggmap)
   
   
 }
