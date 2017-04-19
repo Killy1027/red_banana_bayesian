@@ -257,50 +257,6 @@ if(F){
   h <- c(bandwidth.nrd(xy[,1]), bandwidth.nrd(xy[,2]))
   bg <- kde2d(xy[,1],xy[,2],h=h,n=400,lims=c(xrange,yrange))
   bg$z <- bg$z*NROW(xy)
-  g <- RedBananaMCMC(xy, redbanana$birth, bg=bg, iters=5000, thin = 10)
+  g <- RedBananaMCMC(xy, redbanana$birth, bg=bg, iters=1000, thin = 2)
   
 }
-
-
-if(F){
-  
-  # plot redbanana data onto map of Costa Rica
-  library(ggmap)
-  lon <- range(redbanana$longitude)
-  lat <- range(redbanana$latitude)
-  Costa_Rica <- get_map(location=c(lon=mean(lon),lat=mean(lat)),zoom=15)
-  ggmap(Costa_Rica,extent="device")+geom_point(data=redbanana,aes(x=longitude,y=latitude),col="deeppink2")
-  
-  
-  # for alpha
-  plot(2501:5000,g$pars[2501:5000,1],type="s",main=bquote("Trace Plot of " ~ alpha),xlab="",ylab=bquote( ~ alpha))
-  abline(h=mean(g$pars[2501:5000,1]),col="red")
-  hist(g$pars[2501:5000,1],main=bquote("Poterior of " ~ alpha),xlab="",col="skyblue")
-  abline(v=mean(g$pars[2501:5000,1]),col="red")
-  # for beta
-  plot(2501:5000,g$pars[2501:5000,2],type="s",main=bquote("Trace Plot of " ~ beta),xlab="",ylab=bquote( ~ beta))
-  abline(h=mean(g$pars[2501:5000,2]),col="red")
-  hist(g$pars[2501:5000,2],main=bquote("Posterior of " ~ beta),xlab="",col="skyblue")
-  abline(v=mean(g$pars[2501:5000,2]),col="red")
-  # for p
-  plot(2501:5000,g$pars[2501:5000,3],type="s",main=bquote("Trace Plot of " ~ rho),xlab="",ylab=bquote( ~ rho))
-  abline(h=mean(g$pars[2501:5000,3]),col="red")
-  hist(g$pars[2501:5000,3],main=bquote("Poterior of " ~ rho),xlab="",col="skyblue")
-  abline(v=mean(g$pars[2501:5000,3]),col="red")
-  
-  
-  # calculating the standard deviation of parameters ( compared with MLE method)
-  summary(g$pars)
-  sd(g$pars[2501:5000,1])
-  sd(g$pars[2501:5000,2])
-  sd(g$pars[2501:5000,3])
-  
-  
-  # creditable intetval
-  quantile(g$pars[,1],c(0.025,0.975))
-  quantile(g$pars[,2],c(0.025,0.975))
-  quantile(g$pars[,3],c(0.025,0.975))
-  
-}
-
-
