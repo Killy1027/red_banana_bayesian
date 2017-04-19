@@ -97,6 +97,7 @@
 \def\verb{\lstinline[basicstyle=\ttfamily\small,keywordstyle={}]} %use verb, not lstinline
 \def\rcode{\lstinline[basicstyle=\ttfamily\bfseries\small,keywordstyle={}]} 
 
+\newcommand{\bpi}{\mbox{\boldmath $\pi$} }
 \newcommand{\balpha}{\mbox{\boldmath $\alpha$} }
 \newcommand{\bbeta}{\mbox{\boldmath $\beta$} }
 \newcommand{\bdelta}{\mbox{\boldmath $\delta$} }
@@ -121,6 +122,7 @@
 \newcommand{\bPhi}{\mbox{\boldmath $\Phi$} }
 \newcommand{\bSigma}{\mbox{\boldmath $\Sigma$} }
 \newcommand{\bTheta}{\mbox{\boldmath $\Theta$} }
+
 
 \newcommand{\bfa}{\mbox{\bf a} }
 \newcommand{\bfb}{\mbox{\bf b} }
@@ -361,8 +363,8 @@
 %======================   HEADER   ===========================%
 %=============================================================%
 
-\title{\veryHuge Hurdle Modeling in R Using Bayesian Inference}
-\author{\Large Taylor Trippe, \and Dr.~Earvin Balderama}
+\title{\veryHuge Bayesian Estimation of Modified ETAS Model for Invasive Species}
+\author{\Large Binhui Deng \and Dr.~Earvin Balderama}
 \institute[LUC]{\large Department of Mathematics \& Statistics, Loyola University Chicago, Chicago, IL, USA }
 \date[April 16, 2016]{April 16, 2016} %% I don't know where this goes (earvin)
 %=============================================================%
@@ -396,100 +398,72 @@
 %=============================================================%
 	
 \begin{itemize}
-	\item \textbf{Need:} Effective modeling methods for \red{zero-inflated} and/or \red{over-dispersed} count data.
-  \vspace{0.75cm}
-  \item \textbf{Goal:} Develop a package of user-friendly functions, utilizing \red{MCMC sampling}, that will best model problematic count data that cannot be fit to any typical distribution.
+	\item \textbf{Invasive Plant:} Invasive alien species of plants can destroy the habitat of native species and disturb the natural evolution that takes place in the environment in which they spread.
+  \vspace{0.4cm}
+  \item \textbf{ETAS Model:} Epidemic-Type Aftershock Sequence (ETAS) model, a \red{spatial-temporal marked point process model}, is the most popular stochastic model used to \red{describe earthquake occurrence}, to forecast earthquakes and to detect fluid/magma signals or induced seismicity.
+  \vspace{0.4cm}
+  \item \red{Adjusted ETAS model} is applied onto the study of red banana tree to \red{characterize its spatial-temporal spreading patterns}.
 \end{itemize}
-	%\begin{center}
 	\vspace{-0.25cm}
-	%\end{center}
+	
 	
 \end{block}
 \vfill
 
 
 %=============================================================%
-\begin{block}{Discription}
+\begin{block}{Data}
 %=============================================================%
 	
 \begin{itemize}
-	\item \textbf{hurdle(...):} Used to fit single or double-hurdle regression models to count data via \red{Bayesian inference}.
-  \vspace{0.75cm}
-	\item \textbf{hurdle\textunderscore control(...):} Various parameters for fitting control of \red{hurdle model} regression.
+	\item \textbf{Red Banana Tree:} An invasive plant in Costa Rican rainforest have been observing in recent few years. Heights of 1008 red banana plants were observed and \red{longitude and latitude} coordinates were recorded by GPS. The \red{age} of plants was estimated according to the growth rate. 
+  \vspace{0.4cm}
+	\item \red{788 plants have complete location and origin times data, and were used for the subsequent analyses}.
 \end{itemize}
-	%\begin{center}
-	\vspace{-0.25cm}
-	%\end{center}
+  \vspace{0.4cm} \hspace{0.5cm}
+  \includegraphics[scale=0.24]{redbanana3.jpg}
+  \hspace{1cm}
+%  \includegraphics[scale=0.4]{redbanana1.jpg}
+%  \hspace{1cm}
+  \includegraphics[scale=0.276]{redbanana2.jpg}
+  \hspace{1cm}
+  \includegraphics[scale=0.724]{Plot of redbanana.png}
+  \vspace{0.5cm}
 	
 \end{block}
 \vfill
 
 
 %=============================================================%
-\begin{block}{Usage}
+\begin{block}{Epidemic-Type Aftershock Sequence (ETAS) Model}
 %=============================================================%
 
 \begin{itemize}
-	\item hurdle(y, x = NULL, hurdle = Inf,
-	dist = c(``poisson'', ``nb'', ``gpd''),
-	dist.2 = c(``none'', ``gpd'', "poisson", ``nb''),\\
-	control = hurdle\textunderscore control(...),
-	iters = 1000, burn = 500, nthin = 1,
-	\\plots = T, progress.bar = T)
-\begin{center}
-	\vspace{-0.5cm}
-\end{center}
-	\item hurdle\textunderscore control(a = 1, b = 1, size = 1, beta.prior.mean = 0, \\beta.prior.sd = 1000, beta.tune = 1, pars.tune = 0.2,
-	lam.start = 1, \\mu.start = 1,
-	sigma.start = 1, xi.start = 1)
+	\item The spatial-temporal ETAS model (Ogata, 1998) is a point process model where \red{the rate of an earthquake of magnitude-M occurring at time $t$ and location $(x,y)$ depends on the histroy of occurrences $H_t$}, characterized by	the conditional intensity function:
+	      $$\lambda(t,x,y|H_t)=\mu(x,y)+\sum \limits_{\{i:t_i<t\}}\frac{K_0}{(t-t_i+c)^p} \cdot  \frac{e^{\alpha(M-M_0)}}{((x-x_i)^2+(y-y_i)^2+d)^q}$$
+	      $\mu(x, y):$ A non-homogeneous background rate.\\
+	      $\sum:$ Triggering function defined in the earthquake context.\\
+	      $K_0,\alpha, c, p, d, q:$ Parameters to be estimated.
+	\vspace{0.5cm}
+  \item \red{The ETAS model for red banana plants} by Balderama (2012) is
+        $$\displaystyle{\lambda(t,x,y|H_t)=(1-\rho)\mu(x,y)+\frac{\rho\alpha\beta}{\pi}\sum \limits_{\left\{i:t_i<t\right\}}e^{-\alpha(t-t_i)-\beta\left\{(x-x_i)^2+(y-y_i)^2\right\}}}$$
+        $\frac{\balpha\bbeta}{\bpi}:$ A normalizing constant so that $\sum$ integrates to unity.\\
+        $\balpha:$ Exponential decay rate due to \red{temporal distance apart}.\\
+        $\bbeta:$ Exponential decay rate due to \red{spatial distance apart}.\\
+        $\brho:$ \red{Proportion of events} attributed to triggering by other events.
+  \vspace{0.4cm}
+  \item The \red{log-likelihood function} for the occurrence of red banana plants is \\
+   \hspace{1cm} $\displaystyle{logL=\sum \limits_{i=1}^{n}log\lambda(t_i,x_i,y_i)-\iint_A \int_0^\infty \lambda(t,x,y)dtdxdy}$  \\
+   \hspace{3.1cm} $\displaystyle{=\sum \limits_{i=1}^{n}log\lambda(t_i,x_i,y_i)-(1-p)T\iint_A\mu(x,y)dxdy-pN}$
+   
+   
 \end{itemize}
-%\begin{center}
-\vspace{-0.25cm}
-%\end{center}
+  
+
 
 \end{block}
 \vfill
 
-%=============================================================%
-\begin{block}{Arguments}
-%=============================================================%
-
-
-\begin{itemize}
-	\item \textbf{hurdle(...)}
-	\begin{itemize}
-		\item \textbf{y:} numeric response vector.
-		\item \textbf{x:} optional numeric predictor matrix.
-		\item \textbf{hurdle:} numeric threshold ($\psi$) for `extreme' observations of two-hurdle models. \red{NULL} for one-hurdle models.
-		\item \textbf{dist:} character specification of response distribution.
-		\item \textbf{dist.2:} character specification of response distribution for `extreme' observations of two-hurdle models.
-		\item \textbf{control:} list of parameters for controlling the fitting process, specified by \red{hurdle\textunderscore control()}.
-		\item \textbf{iters:} number of iterations for the Markov chain to run. 
-		\item \textbf{burn:} numeric burn-in length.
-		\item \textbf{nthin:} numeric thinning rate.
-		\item \textbf{plots:} logical operator. \red{TRUE} to print plots. 
-		\item \textbf{progress.bar:} logical operator. \red{TRUE} to print progress bar. 
-	\end{itemize}
-  \vspace{0.75cm}
-	\item \textbf{hurdle\textunderscore control(...)}
-	\begin{itemize}
-		\item \textbf{a:} shape parameter for Gamma($a$, $b$) prior distributions.
-		\item \textbf{b:} rate parameter for Gamma($a$, $b$) prior distributions.
-		\item \textbf{size:} size ($r$) parameter for NB($r$, $\mu$) likelihood distributions.
-		\item \textbf{beta.prior.mean:} mean ($\mu$) for Normal($\mu$, $\sigma^{2}$) prior distributions.
-		\item \textbf{beta.prior.sd:} st. deviation ($\sigma$) for Normal($\mu$, $\sigma^{2}$) prior distributions.
-		\item \textbf{beta.tune:} MCMC tuning for regression coefficient estimation.
-		\item \textbf{pars.tune:} MCMC tuning for parameter estimation.
-		\item \textbf{lam.start, mu.start, sigma.start, xi.start:} initial value(s) for parameter(s) of `extreme' observations distribution.
-	\end{itemize}
-\end{itemize}
-
-
-
-
-
-\end{block}
-%\vfill
 }
 \end{minipage}
 \end{beamercolorbox}
@@ -511,93 +485,88 @@
 
 
 %=============================================================%
-\begin{block}{Functionality \& Applications}
+\begin{block}{Bayesian Estimation}
 %=============================================================%
-%Left: Median estimate of posterior probability
 
-%Right: Uncertainty interval of estimate.
-
-\begin{minipage}[t][0.1mm]{.5\textwidth}
-	
-	\vspace{2mm}
- \red{Response} data:
-	\begin{itemize}
-		\item[] Surveys $\rightarrow$ Boat/aerial continuous-time strip transects.
+ 	\begin{itemize}
+		\item \textbf{Bayesian Analysis:} A statistical paradigm that answers research questions about unknown parameters using probability statements.
+		\vspace{0.4cm}
+		\item \textbf{Prior Distribution:} A probability distribution with respect to \red{current knowledge about parameters}, written as \boldmath{\red{$p(\theta)$}}.
+		\vspace{0.4cm}
+		\item \textbf{Likelihood:} \red{The information regarding parameters} contained by new data $y$, which is proportional to \red{$p(y|\theta)$}. 
+		\vspace{0.4cm}
+		\item \textbf{Posterior Distribution:} An updated probability distribution, on which all Bayesian inference is based, produced by \red{the combination of likelihood and the prior}, written as \red{$p(\theta|y)$}.
+		\vspace{0.4cm}
+		\item The posterior is proportional to the prior times the likelihood:\\ 
+		\vspace{0.6cm}
+		$\displaystyle{p(\theta|y)=\frac{p(\theta)p(y|\theta)}{\int p(\theta)p(y|\theta)d\theta}}$
+		\ , where \red{$\theta = \{\alpha, \beta, \rho\}$}
 	\end{itemize}
-\vspace{0.7cm}
-\red{Environmental} covariates:
-	\begin{itemize}
-		\item[] $\bfx_1=$ Sea surface  temperature.
-		\item[] $\bfx_2=$ Ocean depth.
-		\item[] $\bfx_3=$ Chlorophyll-a level.
-		\item[] $\bfx_4=$ Distance-to-shore.
-	\end{itemize}
-\vspace{0.7cm}
-\red{Temporal} effects (Fourier basis):
-	 \begin{itemize}
-	 	\item[] $\bfx_5=sin(\frac{\pi}{6}\cdot \mbox{Month})$.
-	 	\item[] $\bfx_6=cos(\frac{\pi}{6}\cdot \mbox{Month})$.
-	 \end{itemize}
-
-\end{minipage}
-
-\begin{columns}
-	\column{0.5\textwidth}
-	\flushright
-
-	\column{0.35\textwidth}\flushleft
-
-	\vspace{-1cm}
-	\footnotesize
-	\centering
-	\includegraphics[scale=0.9]{table1.png}\ \
-\end{columns}
-
-\vspace{9.1cm}
-
-\begin{minipage}[t][0.01mm]{.97\textwidth}
-	\red{Fit} a model to the data in \includegraphics[scale=.55]{miscPP.png}\ using \red{hurdlr} package functions:
-\end{minipage}
-
-\vspace{1cm}
-
-	
-\includegraphics[scale=1.4]{code2.png}\ \
-
-\vspace{0.4cm}
-
-\includegraphics[scale=0.8]{plots2.png}\ \
-
-\vspace{1.2cm}
-
-\includegraphics[scale=1.4]{code1.png}\ \
-
-\vspace{0.6cm}
-
-\includegraphics[scale=0.8]{plots4.png}\ \
-
-\vspace{1.2cm}
-
-\begin{minipage}[t][0.1mm]{.97\textwidth}
-	
-	\red{Compare} Single vs Double Hurdle model:
-	\begin{itemize}
-		\item[]  $\rightarrow$ Improved convergence of model parameters.
-		\item[]  $\rightarrow$ Decrease in deviance (supported by DIC and pD).
-		\item[]  $\rightarrow$ Increase in predictive power (based on predictive ordinates PPO\\  \hspace{11mm} and CPO).
-	\end{itemize}
-	
-\end{minipage}
-
-\vspace{7.95cm}
-
-
-
 
 
 \end{block}
 \vfill
+%=============================================================%
+\begin{block}{Results of Bayesian Estimation}
+%=============================================================%
+\vspace{0.3cm}
+  \includegraphics[scale=0.8]{TP of a.png}
+  \includegraphics[scale=0.8]{TP of b.png}
+  \includegraphics[scale=0.8]{TP of p.png}\\
+  \includegraphics[scale=0.8]{P of a.png}
+  \includegraphics[scale=0.8]{P of b.png}
+  \includegraphics[scale=0.8]{P of p.png}
+
+\vspace{-1.5cm}
+
+ \renewcommand\arraystretch{1.3}
+ \begin{center}
+ \begin{tabular}{c|cc}
+  %\hline
+  \textbf{Parameter}  & \textbf{\blue{Posterior Mean}} & \textbf{Posterior SD} \\ \hline
+  \large{$\balpha$}    & \blue{\large{0.0718}}  & \large{0.0042}  \\ %\hline
+  \large{$\bbeta$}     & \blue{\large{0.0260}}  & \large{0.0022}  \\ %\hline
+  \large{$\brho$}      & \blue{\large{0.5958}}  & \large{0.0195}  \\ %\hline
+ \end{tabular}  
+ \end{center}
+ 
+ \begin{itemize}
+  \item $\balpha$: The intensity of triggering events \red{decays at a rate of $1-e^{-0.0718}=6.93\%$ for every week that passes}.
+  \vspace{0.3cm}
+  \item $\bbeta$:  The intensity of triggering events \red{decays at a rate of $1-e^{-0.026}=2.57\%$ for every squared distance (in meters) away}.
+  \vspace{0.3cm}
+  \item $\brho$: \red{59.58\% of events were triggered} by previous events. Thus,\\
+  \red{40.42\%  is the background rate}, i.e., percentage of immigrant events.
+ \end{itemize}
+ 
+\end{block}
+\vfill
+
+%========================================
+\begin{block}{Bayesian Estimate Versus MLE}
+%========================================
+
+\red{Maximum Likelihood Estimates} obtained by Newton-Raphson algorithm:
+  \begin{center}
+  \renewcommand\arraystretch{1.3}
+  \begin{tabular}{c|cc}
+  %\hline
+  \textbf{Parameter}  & \blue{\textbf{MLE}} & \textbf{Standard Error} \\ \hline
+  \large{$\balpha$}    & \blue{\large{0.0761}}     & \large{0.0045} \\ %\hline
+  \large{$\bbeta$}     & \blue{\large{0.0292}}     & \large{0.0022} \\ %\hline
+  \large{$\brho$}      & \blue{\large{0.5767}}     & \large{0.0193} \\ %\hline
+  \end{tabular}
+  \end{center}
+\begin{itemize}
+  \item \green{Estimates from Bayesian MCMC are very close to MLEs.}
+  \item \green{Bayesian estimates have such small standard deviations that can be considered as excellent estimates.}
+  
+\end{itemize}
+
+\end{block}
+\vfill
 }
+
 \end{minipage}
 \end{beamercolorbox}
 \end{column}
@@ -616,84 +585,78 @@
 %=============================================================%
 
 
-
 %=============================================================%
-\begin{block}{Model}
-%=============================================================%
-	
-	\begin{itemize}
-		\item \red{Single-Hurdle modeling} is used to fit \red{zero-inflated} data.
-	\end{itemize}
-	%\item 
-	{\bf Likelihood of observing count $y_{i}$:}
-	%\end{itemize}
-	\beqx
-	f\paren{y_{i} \cond \blue{\btheta}} = 
-	\begin{cases}
-		\blue{p_{i}}, & y_{i}=0,\\
-		{[1-p_{i}] \cdot\NB(\blue{\mu_{i}}, r)}, & 1\le y_{ij} < \psi,\\
-
-	\end{cases}
-	\eeqx
-	
-	\begin{itemize}
-		\item \red{Double-Hurdle modeling} may account for both excessive \red{zero-inflation} and extreme \red{over-dispersion}.
-	\end{itemize}
-
-	%\item 
-	{\bf Likelihood of observing count $y_{i}$:}
-	%\end{itemize}
-	\beqx
-	f(y_{i} | \blue{\btheta}) = 
-	\begin{cases}
-		\blue{p_{i}}, &  y_{i}=0,\\
-		{[1-p_{i}]\cdot [1-q_{i}] \cdot\NB(\blue{\mu_{i}}, r)}, & 1\le y_{ij} < \psi,\\
-		{[1-p_{i}]\cdot \blue{q_{i}}\cdot \GPD(\psi, \sigma, \xi)}, & y_{ij} \ge \psi.
-	\end{cases}
-	\eeqx
-	\begin{itemize}
-
-		\item \red{Negative binomial (NB)} for small, ``typical'' counts.
-		\begin{itemize}
-			\item Left-truncated at 0 and right-truncated at threshold $\psi$.
-			  	\begin{itemize}
-						\item Single-hurdle models are truncated only at 0.
-						\item ZIP, ZINB, Poisson-hurdle, NB-hurdle distributions are common.
-				\end{itemize}
-		\end{itemize}
-		\item \red{Generalized Pareto (GPD)} for large, right-tail counts.
-		\begin{itemize}
-			\item GPD density is $>0$ at threshold $\psi$ or above.
-		\end{itemize}
-		%\end{itemize}
-	\end{itemize}
-	
-	
-	
-\end{block}
-\vfill
-
-%=============================================================%
-\begin{block}{Bayesian Regression}
+\begin{block}{Markov Chain Monte Carlo (MCMC Algorithm)}
 %=============================================================%
 	
 	
 	\begin{itemize}
+			\item \textbf{Goal of MCMC:} Draw samples from a posterior distribution without having to know its exact height (probability) at any point.
+%			\vspace{0.3cm}
+%		\item \textbf{MCMC Algorithms:} A class of algorithms for \red{sampling from a probability distribution based on constructing a Markov Chain} that has the desired distribution as its stationary distribution. 
+			\vspace{0.3cm}
+		\item \textbf{Monte Carlo Methods:} A class of algorithms relies on repeated random sampling to obtain numerical results
+		\vspace{0.3cm}
+ 		\item \green{\textbf{Markov Chain:} A type of Markov Process that has either discrete state space or discrete index set (often representing time).}
+
+			\begin{itemize}
+	  	\item	\red{The state of the chain after a number of steps is then used as a sample of the desired distribution}. 
+%		  \item The quality of the sample improves as a function of the number of steps.
+		  \end{itemize}
+		  \vspace{0.2cm}
+		  
+	 
+	  
+%	  \begin{itemize}
+%	    \item \textbf{Markov Process:} A process exhibits the Markov Property.
+%	  	\item \textbf{Markov Property:} Given a process which is at a state $X_n$ at a particular point of time, the probability of $X_{n+1}=k$, where $k$ is any of the $M$ states the process can hop to, will only be dependent on which state it is at the given moment of time. And not on how it reached the current state. Mathematically speaking:
+%		$$\displaystyle{P(X_{n+1}=k|X_n=k_n,X_{n-1}=k_{n-1},\ldots,X_1=k_1)=P(X_{n+1}=k|X_n=k_n)}$$
+		  
+%		\end{itemize}
 		
-
-		\item A series of \red{linear regressions} are run to estimate:
 		
-		\begin{itemize}
-			\item[] {$\blue{\itbf{p}}$ \it = \textsf{P}(zero-count)}
-			\item[] $\qquad\qquad \logit(\blue{\itbf{p}}) = \bfX\bgamma$
-			\item[] {$\blue{\bmu}$ \it = mean of typical-count distribution.}
-			\item[] $\qquad\qquad\log(\blue{\bmu}) = \bfX\bbeta$
-			\item[] {$\blue{\itbf{q}}$ \it = P(large-count $|$ nonzero-count)}
-			\item[] $\qquad\qquad\logit(\blue{\itbf{q}}) = \bfX\bdelta$
-			\end{itemize}
-
-		\item A Bayesian approach to linear regression allows for the user to \red{characterize the uncertainty} in the \red{response vector} \textbf{y} through a probability distribution f( \textbf{y}$|$\blue{\btheta}).
-		\item Parameters are updated using a home-grown \red{Markov chain Monte Carlo} algorithm utilizing \red{Metropolis} sampling. 
+		
+		\item \textbf{MCMC Algorithm:}
+		  \begin{enumerate}
+	
+    		\item Set up prior distributions and proposal distributions
+    		\vspace{0.1cm}
+    		  \renewcommand\arraystretch{1.3}
+          \begin{center}
+          \begin{tabular}{c|cc}
+          \textbf{Parameter}  & \blue{\textbf{Prior Distribution}} & \textbf{Proposal Distribution}\\ \hline
+          \large{$\balpha$}    & \blue{Gamma(1,10)}   & Normal($\balpha_0$,0.1)  \\ %\hline
+          \large{$\bbeta$}     & \blue{Gamma(1,10)}   & Normal($\bbeta_0$,0.1)  \\ %\hline
+          \large{$\brho$}      & \blue{Uniform(0,1)}  & Beta($\brho_0$,$1-\brho_0$)   \\ %\hline
+          \end{tabular}  
+         \end{center}
+          
+      \vspace{0.3cm}  
+    		\item Initialize $\btheta$  by randomly picking a \red{initial state} from each prior.
+    %		Start at a random initial state (randomly pick an initial number from the prior)
+    		 
+    		\item For $t$ in (1:50000), \red{update $\btheta$}:
+    		 \begin{itemize}
+	       \item \red{Propose a candidate $\balpha_1$} (randomly pick a candidate state from the proposal distribution based on current state $\balpha_0$).
+	        \item Compute \red{Metropolis-Hastings ratio \textbf{R}}, which is \red{$\frac{p(\alpha_1|y)}{p(\alpha_0|y)}$}.
+	        \item \red{Accept $\balpha_1$ and replace $\balpha_0$ at probability \textbf{R}}.
+	        \item Proceed the same procedure above on $\bbeta$ and $\brho$.
+	        \item \red{Record $\btheta$} after each iteration.
+	       \end{itemize}
+	       
+	       \item After 50,000 iterations, return all states for parameters. \red{The 50,000 samples of each parameter make the posterior distributions}.
+	       \item Compute \red{the means of samples} as the estimates of parameters.
+	       \end{enumerate}
+	      
+		  
+		\vspace{0.4cm}
+		
+		
+		
+		\item \textbf{Thinning:} \red{Discard all but $10^{th}$ observations} to get rid of autocorrelation to guarantee the independecy of samples.
+		\vspace{0.4cm}
+		\item \textbf{Burn-in:} \red{Throwing away first 2500 observations} to minimize the effect of initial values on the posterior inference.
+		
 	\end{itemize}
 	
 
@@ -701,40 +664,44 @@
 \vfill
 
 %=============================================================%
-\begin{block}{Current Work \& Future Considerations}
+\begin{block}{Future Work}
 %=============================================================%
+
+
 \begin{itemize}
-	\item Incorporate other distributions; i.e., \red{log-normal} models.
-	\item Treat threshold parameter \red{$\psi$} as unknown.
-	\item Create similar functions for applying models to zero-inflated (ZIP, ZINP) count distributions.
-	\item Increase functionality to allow for \red{hierarchical regression} of \red{nested data}.
-	\item Expand on function output to include clean and variable plots, convergence and coverage diagnostics, predictive power, etc.
-	\item Release \red{hurdlr} \includegraphics[scale=.55]{miscPP.png}\ package to CRAN for public use.
+\item \red{Simulation} needs to be done to check if the adjusted ETAS model fits the actual red banana plants data.
+\vspace{0.4cm}
+\item \red{More environment covirates and variables} should be considered into the spreading pattern of red banana plants, such as the distance from rivers, the amount of sunlight, elevation of plants etc.
+\vspace{0.4cm}
+\item The adjusted ETAS model needs to be \red{applied on other invasive speicies or point-process natural events} to assess its effectiveness.
 \end{itemize}
 
 
 
 \end{block}
 \vfill
+
 %=============================================================%
-\begin{block}{Acknowledgements}
+\begin{block}{Reference}
 %=============================================================%
 
+\begin{thebibliography}{}
 
-\begin{itemize}
-\item Software used: \includegraphics[scale=.55]{miscPP.png}\ \ (\url{www.r-project.org}) 
-\item Data acquired from: \red{Avian Compendium} (NOAA)
-\item Special thanks to Timothy O'Brien and the Loyola University Chicago Department of Mathematics and Statistics.
-\end{itemize}
+\bibitem{Ogata}%just a name%
+Ogata, Y.(1988),
+``Statistical Models for Earthquake Occurrences and Residual Analysis for Point Processes,"
+\textit{Journal of the American Statistical Association}, 83, 9-27.
 
+\bibitem{Balderama}
+Balderama, E.(2012),
+``Spatial-Temporal Branching Point Process Models in the Study of Invasive Species,"
+\textit{University of California, Los Angeles}
+
+\end{thebibliography}
 
 
 \end{block}
-
-
-
-
-
+% \vfill
 }
 \end{minipage}
 \end{beamercolorbox}
