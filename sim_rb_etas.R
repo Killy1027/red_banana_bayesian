@@ -114,11 +114,17 @@ if(F){
   #======================================
   #======================================
   
-  theta = c(.076, .029, .577)
-  theta = c(.3, 20, .96)
-  sim1 <- sim_rb_etas(theta, 194.5509, bg)
+#  theta = c(.3, 20, .96)
+  theta = c(mean(g$pars[2501:5000,1]), mean(g$pars[2501:5000,2]), mean(g$pars[2501:5000,3]))
+  sim1 <- sim_rb_etas(theta, max(redbanana$birth), bg)
+  sim2 <- sim_rb_etas(theta, max(redbanana$birth), bg)
+  sim3 <- sim_rb_etas(theta, max(redbanana$birth), bg)
+  par(pty="s")
+  plot(sim1$pts,xlim=range(bg$x),ylim=range(bg$y),main="Simulation 1", pch=19,col="deeppink1",cex=0.4)
+  plot(sim2$pts,xlim=range(bg$x),ylim=range(bg$y),main="Simulation 2", pch=19,col="deeppink1",cex=0.4)
+  plot(sim3$pts,xlim=range(bg$x),ylim=range(bg$y),main="Simulation 3", pch=19,col="deeppink1",cex=0.4)
+  
   par(mfrow=c(1,2))
-  plot(sim1$pts,xlim=range(bg$x),ylim=range(bg$y), pch=".",main="simulation")
   plot(redbanana$longitude,redbanana$latitude,pch=".",main="observed")
   
   library(ggmap)

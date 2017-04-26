@@ -353,7 +353,7 @@
 \begin{itemize}
 	\item \textbf{Invasive Plant:} Invasive alien species of plants can destroy the habitat of native species and disturb the natural evolution that takes place in the environment in which they spread.
   \vspace{0.4cm}
-  \item \textbf{ETAS Model:} Epidemic-Type Aftershock Sequence (ETAS) model, a \red{spatial-temporal marked point process model}, is the most popular stochastic model used to \red{describe earthquake occurrence}, to forecast earthquakes and to detect fluid/magma signals or induced seismicity.
+  \item \textbf{ETAS Model:} Epidemic-Type Aftershock Sequence (ETAS) model, a \red{spatial-temporal marked point process model}, is the most popular stochastic model used to \red{describe earthquake occurrences}, to forecast earthquakes and to detect fluid/magma signals or induced seismicity.
   \vspace{0.4cm}
   \item \red{Adjusted ETAS model} is applied onto the study of red banana tree to \red{characterize its spatial-temporal spreading patterns}.
 \end{itemize}
@@ -369,7 +369,7 @@
 %=============================================================%
 	
 \begin{itemize}
-	\item \textbf{Red Banana Tree:} An invasive plant in Costa Rican rainforest have been observing in recent few years. Heights of 1008 red banana plants were observed and \red{longitude and latitude} coordinates were recorded by GPS. The \red{age} of plants was estimated according to the growth rate. 
+	\item \textbf{Red Banana Tree:} An invasive plant in Costa Rican rainforest have been observing in recent few years. Heights of 1008 red banana plants were observed and longitude and latitude coordinates were recorded by GPS. The age of plants was estimated according to the growth rate. 
   \vspace{0.4cm}
 	\item \red{788 plants have complete location and origin times data, and were used for the subsequent analyses}.
 \end{itemize}
@@ -403,7 +403,7 @@
         $\frac{\balpha\bbeta}{\bpi}:$ A normalizing constant so that $\sum$ integrates to unity.\\
         $\balpha:$ Exponential decay rate due to \red{temporal distance apart}.\\
         $\bbeta:$ Exponential decay rate due to \red{spatial distance apart}.\\
-        $\brho:$ \red{Proportion of events} attributed to triggering by other events.
+        $\brho:$ \red{Proportion of events} attributed to triggering by previous events.
   \vspace{0.4cm}
   \item The \red{log-likelihood function} for the occurrence of red banana plants is \\
    \hspace{1cm} $\displaystyle{logL=\sum \limits_{i=1}^{n}log\lambda(t_i,x_i,y_i)-\iint_A \int_0^\infty \lambda(t,x,y)dtdxdy}$  \\
@@ -451,7 +451,7 @@
 		\item \textbf{Posterior Distribution:} An updated probability distribution, on which all Bayesian inference is based, produced by \red{the combination of likelihood and the prior}, written as \red{$p(\theta|y)$}.
 		\vspace{0.4cm}
 		\item The posterior is proportional to the prior times the likelihood:\\ 
-		\vspace{0.6cm}
+		\vspace{0.4cm}
 		$\displaystyle{p(\theta|y)=\frac{p(\theta)p(y|\theta)}{\int p(\theta)p(y|\theta)d\theta}}$
 		\ , where \red{$\theta = \{\alpha, \beta, \rho\}$}
 	\end{itemize}
@@ -511,8 +511,9 @@
   \end{tabular}
   \end{center}
 \begin{itemize}
-  \item \green{Estimates from Bayesian MCMC are very close to MLEs.}
-  \item \green{Bayesian estimates have such small standard deviations that can be considered as excellent estimates.}
+  \item Estimates result from Bayesian MCMC are \red{very close} to MLEs. 
+  \vspace{0.2cm}
+  \item Most of the time, the standard deviations in Bayesian MCMC are \red{smaller} than the standard errors of MLEs.
   
 \end{itemize}
 
@@ -544,18 +545,18 @@
 
 
 	\begin{itemize}
-			\item \textbf{Goal of MCMC:} Draw samples from a posterior distribution without having to know its exact height (probability) at any point.
+			\item \textbf{Goal of MCMC:} \red{Draw samples} from a posterior distribution without having to know its exact height (probability) at any point.
 %			\vspace{0.3cm}
 %		\item \textbf{MCMC Algorithms:} A class of algorithms for \red{sampling from a probability distribution based on constructing a Markov Chain} that has the desired distribution as its stationary distribution. 
 			\vspace{0.3cm}
-		\item \textbf{Monte Carlo Methods:} A class of algorithms relies on repeated random sampling to obtain numerical results.
-		\vspace{0.3cm}
- 		\item \textbf{Markov Chain:} A type of Markov Process that has either discrete state space or discrete index set (often representing time).
+%		\item \textbf{Monte Carlo Methods:} A class of algorithms relies on \red{repeated random sampling} to obtain numerical results.
+%		\vspace{0.3cm}
+% 		\item \textbf{Markov Chain:} A type of Markov Process that has either discrete state space or discrete index set (often representing time).
 
-			\begin{itemize}
-	  	\item	The state of the chain after a number of steps is then used as a sample of the desired distribution. 
+%			\begin{itemize}
+%	  	\item	The state of the chain after a number of steps is then used as \red{a sample of the desired distribution}. 
 %		  \item The quality of the sample improves as a function of the number of steps.
-		  \end{itemize}
+%		  \end{itemize}
 		  \vspace{0.2cm}
 		  
 	 
@@ -569,36 +570,39 @@
 		
 		
 		
-		\item \textbf{MCMC Algorithm:}
+		\item \textbf{MCMC Algorithm} was created to compute estimates of parameters.\\
+		Procedures are as below:
 		  \begin{enumerate}
-	
-    		\item Set up prior distributions and proposal distributions
+       	\vspace{0.3cm}
+    		\item Set up \red{prior distributions} and \red{proposal distributions}:
     		\vspace{0.1cm}
     		  \renewcommand\arraystretch{1.3}
           \begin{center}
           \begin{tabular}{c|cc}
           \textbf{Parameter}  & \blue{\textbf{Prior Distribution}} & \textbf{Proposal Distribution}\\ \hline
-          \large{$\balpha$}    & \blue{Gamma(1,10)}   & Normal($\balpha_0$,0.1)  \\ %\hline
-          \large{$\bbeta$}     & \blue{Gamma(1,10)}   & Normal($\bbeta_0$,0.1)  \\ %\hline
-          \large{$\brho$}      & \blue{Uniform(0,1)}  & Beta($\brho_0$,$1-\brho_0$)   \\ %\hline
+          \large{$\balpha$}    & \blue{Gamma(1,10)}   & Normal($\balpha^{(t-1)}$,0.1)  \\ %\hline
+          \large{$\bbeta$}     & \blue{Gamma(1,10)}   & Normal($\bbeta^{(t-1)}$,0.1)  \\ %\hline
+          \large{$\brho$}      & \blue{Uniform(0,1)}  & Beta($\brho^{(t-1)}$,$1-\brho^{(t-1)}$)   \\ %\hline
           \end{tabular}  
          \end{center}
           
       \vspace{0.3cm}  
-    		\item Initialize $\btheta$  by randomly picking a \red{initial state} from each prior.
+    		\item \red{Initialize $\btheta^{(0)}$} by randomly picking an initial state from each prior.
     %		Start at a random initial state (randomly pick an initial number from the prior)
-    		 
-    		\item For $t$ in (1:50000), \red{update $\btheta$}:
+    	  \vspace{0.3cm}
+    		\item For $t$ in (1:50000), \red{update $\btheta^{(t)}$}:
     		 \begin{itemize}
-	       \item \red{Propose a candidate $\balpha_1$} (randomly pick a candidate state from the proposal distribution based on current state $\balpha_0$).
-	        \item Compute \red{Metropolis-Hastings ratio \textbf{R}}, which is \red{$\frac{p(\alpha_1|y)}{p(\alpha_0|y)}$}.
-	        \item \red{Accept $\balpha_1$ and replace $\balpha_0$ at probability \textbf{R}}.
-	        \item Proceed the same procedure above on $\bbeta$ and $\brho$.
-	        \item \red{Record $\btheta$} after each iteration.
+    		 \vspace{0.2cm}
+	       \item \red{Propose a candidate $\btheta^{(c)}$} based on the proposal distributions.
+	       \vspace{0.2cm}
+	        \item Compute Metropolis-Hastings ratio \red{\textbf{R} $=\frac{p(\theta^{(c)}|y)}{p(\theta^{(t-1)}|y)}$}.
+	        \vspace{0.3cm}
+	        \item \red{Let $\btheta^{(t)}=\btheta^{(c)}$ with probability \textbf{R}, otherwise $\btheta^{(t)}=\btheta^{(t-1)}$}.
 	       \end{itemize}
-	       
-	       \item After 50,000 iterations, return all states for parameters. \red{The 50,000 samples of each parameter make the posterior distributions}.
-	       \item Compute \red{the means of samples} as the estimates of parameters.
+	       \vspace{0.3cm}
+	       \item The \red{50,000 iterations} represent the Monte Carlo samples of posterior distributions.
+	       \vspace{0.2cm}
+	       \item Compute \red{posterior means} to represent estimates of parameters.
 	       \end{enumerate}
 	      
 		  
@@ -606,15 +610,24 @@
 		
 		
 		
-		\item \textbf{Thinning:} \red{Discard all but $10^{th}$ observations} to get rid of autocorrelation to guarantee the independecy of samples.
+		\item \textbf{Thinning:} \red{Discard all but $10^{th}$ observations} (5,000 left) to get rid of autocorrelation to guarantee the independecy of samples.
 		\vspace{0.4cm}
-		\item \textbf{Burn-in:} \red{Throwing away first 2500 observations} to minimize the effect of initial values on the posterior inference.
-		
-	\end{itemize}
+		\item \textbf{Burn-in:} \red{Throwing away first 2,500 observations} to minimize the effect of initial values on the posterior inference.
+		\vspace{0.4cm}
+	\item Below are \red{simulations} of the adjusted ETAS model for red banana plants by using Bayesian estimates.
 	
+\vspace{0.5cm}
+  \hspace{1cm}
+  \includegraphics[scale=1.1]{simulation1.png}
+  \hspace{1cm}
+  \includegraphics[scale=1.1]{simulation2.png}
+  \hspace{1cm}
+  \includegraphics[scale=1.1]{simulation3.png}
+  
+\end{itemize}
 
 \end{block}
-\vfill
+% \vfill
 
 %=============================================================%
 \begin{block}{Future Work}
@@ -622,17 +635,16 @@
 
 
 \begin{itemize}
-\item \red{Simulation} needs to be done to check if the adjusted ETAS model fits the actual red banana plants data.
+
+\item \red{More environmental covariates} should be considered into the model to characterize the spreading pattern of red banana plants, such as distance from rivers, amount of sunlight, elevation and temperature. 
 \vspace{0.4cm}
-\item \red{More environment covirates and variables} should be considered into the spreading pattern of red banana plants, such as the distance from rivers, the amount of sunlight, elevation of plants etc.
-\vspace{0.4cm}
-\item The adjusted ETAS model needs to be \red{applied on other invasive speicies or point-process natural events} to assess its effectiveness.
+\item The adjusted ETAS model should be \red{applied on other invasive species or point-process natural events} to assess its effectiveness, such as the patterns of volcanic eruption occurrences.
 \end{itemize}
 
 
 
 \end{block}
-\vfill
+% \vfill
 
 %=============================================================%
 \begin{block}{Reference}
@@ -647,8 +659,8 @@ Ogata, Y.(1988),
 
 \bibitem{Balderama}
 Balderama, E.(2012),
-``Spatial-Temporal Branching Point Process Models in the Study of Invasive Species,"
-\textit{University of California, Los Angeles}
+``Application of Branching Models in the Study of Invasive Species,"
+\textit{Journal of the American Statistical Association}, 107.498: 467-476.
 
 \end{thebibliography}
 

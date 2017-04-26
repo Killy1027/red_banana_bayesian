@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  19 APR 2017 13:35
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  19 APR 2017 23:25
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -2076,44 +2076,42 @@ Package textcomp Info: Setting ptmj sub-encoding to TS1/4 on input line 409.
 LaTeX Font Warning: Font shape `OT1/cmtt/bx/n' in size <37.33> not available
 (Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 374.
 
-LaTeX Font Info:    Calculating math sizes for size <37.33> on input line 374.
-LaTeX Font Info:    Try loading font information for OT1+mathkerncmss on input 
-line 374.
-
-(/usr/local/texlive/2016/texmf-dist/tex/latex/sansmathaccent/ot1mathkerncmss.fd
-File: ot1mathkerncmss.fd 2013/03/27 Fontinst v1.933 font definitions for OT1/ma
-thkerncmss.
-) <figures/LUC_vertical_notagline.png, id=13, 41.4348pt x 52.998pt>
+<figures/LUC_vertical_notagline.png, id=13, 41.4348pt x 52.998pt>
 File: figures/LUC_vertical_notagline.png Graphic file (type png)
 
 <use figures/LUC_vertical_notagline.png>
 Package pdftex.def Info: figures/LUC_vertical_notagline.png used on input line 
 374.
 (pdftex.def)             Requested size: 145.02136pt x 185.49252pt.
-LaTeX Font Info:    Calculating math sizes for size <31.1> on input line 736.
+LaTeX Font Info:    Calculating math sizes for size <31.1> on input line 748.
+LaTeX Font Info:    Try loading font information for OT1+mathkerncmss on input 
+line 748.
 
-<figures/redbanana3.jpg, id=15, 1088.065pt x 1071.00125pt>
+(/usr/local/texlive/2016/texmf-dist/tex/latex/sansmathaccent/ot1mathkerncmss.fd
+File: ot1mathkerncmss.fd 2013/03/27 Fontinst v1.933 font definitions for OT1/ma
+thkerncmss.
+) <figures/redbanana3.jpg, id=15, 1088.065pt x 1071.00125pt>
 File: figures/redbanana3.jpg Graphic file (type jpg)
 
 <use figures/redbanana3.jpg>
-Package pdftex.def Info: figures/redbanana3.jpg used on input line 736.
+Package pdftex.def Info: figures/redbanana3.jpg used on input line 748.
 (pdftex.def)             Requested size: 261.14093pt x 257.04555pt.
 
 <figures/redbanana2.jpg, id=16, 933.4875pt x 930.47626pt>
 File: figures/redbanana2.jpg Graphic file (type jpg)
 
 <use figures/redbanana2.jpg>
-Package pdftex.def Info: figures/redbanana2.jpg used on input line 736.
+Package pdftex.def Info: figures/redbanana2.jpg used on input line 748.
 (pdftex.def)             Requested size: 257.64282pt x 256.81172pt.
 
 <figures/Plot of redbanana.png, id=17, 358.33875pt x 361.35pt>
 File: figures/Plot of redbanana.png Graphic file (type png)
 
 <use figures/Plot of redbanana.png>
-Package pdftex.def Info: figures/Plot of redbanana.png used on input line 736.
+Package pdftex.def Info: figures/Plot of redbanana.png used on input line 748.
 (pdftex.def)             Requested size: 259.43626pt x 261.61641pt.
 
-Overfull \hbox (20.0824pt too wide) in paragraph at lines 736--736
+Overfull \hbox (20.0824pt too wide) in paragraph at lines 748--748
 [][] 
  []
 
@@ -2121,67 +2119,90 @@ Overfull \hbox (20.0824pt too wide) in paragraph at lines 736--736
 File: figures/TP of a.png Graphic file (type png)
 
 <use figures/TP of a.png>
-Package pdftex.def Info: figures/TP of a.png used on input line 736.
+Package pdftex.def Info: figures/TP of a.png used on input line 748.
 (pdftex.def)             Requested size: 284.26237pt x 224.0373pt.
 
 <figures/TP of b.png, id=19, 358.33875pt x 280.04625pt>
 File: figures/TP of b.png Graphic file (type png)
 
 <use figures/TP of b.png>
-Package pdftex.def Info: figures/TP of b.png used on input line 736.
+Package pdftex.def Info: figures/TP of b.png used on input line 748.
 (pdftex.def)             Requested size: 286.67139pt x 224.0373pt.
  <figures/TP of p.png, id=20, 357.335pt x 285.065pt>
 File: figures/TP of p.png Graphic file (type png)
 
 <use figures/TP of p.png>
-Package pdftex.def Info: figures/TP of p.png used on input line 736.
+Package pdftex.def Info: figures/TP of p.png used on input line 748.
 (pdftex.def)             Requested size: 285.86838pt x 228.0523pt.
  <figures/P of a.png, id=21, 358.33875pt x 361.35pt>
 File: figures/P of a.png Graphic file (type png)
 
 <use figures/P of a.png>
-Package pdftex.def Info: figures/P of a.png used on input line 736.
+Package pdftex.def Info: figures/P of a.png used on input line 748.
 (pdftex.def)             Requested size: 286.67139pt x 289.0804pt.
  <figures/P of b.png, id=22, 358.33875pt x 361.35pt>
 File: figures/P of b.png Graphic file (type png)
 
 <use figures/P of b.png>
-Package pdftex.def Info: figures/P of b.png used on input line 736.
+Package pdftex.def Info: figures/P of b.png used on input line 748.
 (pdftex.def)             Requested size: 286.67139pt x 289.0804pt.
  <figures/P of p.png, id=23, 358.33875pt x 361.35pt>
 File: figures/P of p.png Graphic file (type png)
 
 <use figures/P of p.png>
-Package pdftex.def Info: figures/P of p.png used on input line 736.
+Package pdftex.def Info: figures/P of p.png used on input line 748.
 (pdftex.def)             Requested size: 286.67139pt x 289.0804pt.
+LaTeX Font Info:    Calculating math sizes for size <37.33> on input line 748.
 
-Overfull \hbox (20.0824pt too wide) in paragraph at lines 736--736
+Overfull \hbox (20.0824pt too wide) in paragraph at lines 748--748
 [][] 
  []
 
-LaTeX Font Info:    Calculating math sizes for size <15> on input line 736.
+LaTeX Font Info:    Calculating math sizes for size <15> on input line 748.
+<figures/simulation1.png, id=24, 218.8175pt x 256.96pt>
+File: figures/simulation1.png Graphic file (type png)
+
+<use figures/simulation1.png>
+Package pdftex.def Info: figures/simulation1.png used on input line 748.
+(pdftex.def)             Requested size: 240.69998pt x 282.65686pt.
+
+<figures/simulation2.png, id=25, 215.80624pt x 250.9375pt>
+File: figures/simulation2.png Graphic file (type png)
+
+<use figures/simulation2.png>
+Package pdftex.def Info: figures/simulation2.png used on input line 748.
+(pdftex.def)             Requested size: 237.38759pt x 276.03209pt.
+
+<figures/simulation3.png, id=26, 212.795pt x 252.945pt>
+File: figures/simulation3.png Graphic file (type png)
+
+<use figures/simulation3.png>
+Package pdftex.def Info: figures/simulation3.png used on input line 748.
+(pdftex.def)             Requested size: 234.0752pt x 278.24036pt.
+
 
 LaTeX Font Warning: Font shape `OT1/cmss/m/it' in size <31.1> not available
-(Font)              Font shape `OT1/cmss/m/sl' tried instead on input line 736.
+(Font)              Font shape `OT1/cmss/m/sl' tried instead on input line 748.
 
 
 
-Overfull \hbox (20.0824pt too wide) in paragraph at lines 736--736
+Overfull \hbox (20.0824pt too wide) in paragraph at lines 748--748
 [][] 
  []
 
 File: figures/LUC_vertical_notagline.png Graphic file (type png)
 <use figures/LUC_vertical_notagline.png>
 Package pdftex.def Info: figures/LUC_vertical_notagline.png used on input line 
-736.
+748.
 (pdftex.def)             Requested size: 145.02136pt x 185.49252pt.
  [1{/usr/local/texlive/2016/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
 
  <./figures/LUC_vertical_notagline.png> <./figures/redbanana3.jpg> <./figures/r
 edbanana2.jpg> <./figures/Plot of redbanana.png> <./figures/TP of a.png> <./fig
 ures/TP of b.png> <./figures/TP of p.png> <./figures/P of a.png> <./figures/P o
-f b.png> <./figures/P of p.png> </usr/local/texlive/2016/texmf-dist/tex/latex/b
-eamer/art/beamericonarticle.pdf>]
+f b.png> <./figures/P of p.png> <./figures/simulation1.png> <./figures/simulati
+on2.png> <./figures/simulation3.png> </usr/local/texlive/2016/texmf-dist/tex/la
+tex/beamer/art/beamericonarticle.pdf>]
 \tf@nav=\write7
 \openout7 = `post1.nav'.
 
@@ -2191,11 +2212,11 @@ eamer/art/beamericonarticle.pdf>]
 \tf@snm=\write9
 \openout9 = `post1.snm'.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 738.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 738.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 750.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 750.
 
 (./post1.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 738.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 750.
 
 
  *File List*
@@ -2371,9 +2392,9 @@ translator-numbers-dictionary-English.dict
 translator-theorem-dictionary-English.dict    
 textcomp.sty    2005/09/27 v1.99g Standard LaTeX package
   ts1enc.def    2001/06/05 v3.0e (jk/car/fm) Standard LaTeX file
+figures/LUC_vertical_notagline.png
 ot1mathkerncmss.fd    2013/03/27 Fontinst v1.933 font definitions for OT1/mathk
 erncmss.
-figures/LUC_vertical_notagline.png
 figures/redbanana3.jpg
 figures/redbanana2.jpg
 figures/Plot of redbanana.png
@@ -2383,22 +2404,25 @@ figures/TP of p.png
 figures/P of a.png
 figures/P of b.png
 figures/P of p.png
+figures/simulation1.png
+figures/simulation2.png
+figures/simulation3.png
 figures/LUC_vertical_notagline.png
  ***********
 
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 738.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 750.
 Package rerunfilecheck Info: File `post1.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 738.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 750.
  ) 
 Here is how much of TeX's memory you used:
- 28739 strings out of 493014
- 530696 string characters out of 6133351
- 710697 words of memory out of 5000000
- 31691 multiletter control sequences out of 15000+600000
+ 28745 strings out of 493014
+ 530834 string characters out of 6133351
+ 708355 words of memory out of 5000000
+ 31697 multiletter control sequences out of 15000+600000
  42931 words of font info for 145 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 56i,25n,68p,10356b,1626s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 56i,25n,68p,10356b,1615s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2016/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}
 </usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmbsy10.pfb>
 </usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><
@@ -2413,10 +2437,10 @@ sr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></us
 r/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb></usr
 /local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb><
 /usr/local/texlive/2016/texmf-dist/fonts/type1/public/cm-super/sfso1728.pfb>
-Output written on post1.pdf (1 page, 827280 bytes).
+Output written on post1.pdf (1 page, 872971 bytes).
 PDF statistics:
- 106 PDF objects out of 1000 (max. 8388607)
+ 112 PDF objects out of 1000 (max. 8388607)
  62 compressed objects within 1 object stream
  5 named destinations out of 1000 (max. 500000)
- 93 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 108 words of extra memory for PDF output out of 10000 (max. 10000000)
 
