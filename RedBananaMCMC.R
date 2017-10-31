@@ -24,8 +24,8 @@ get.mu.indices <- function(xy, kern){
 #======================================
 RedBananaMCMC <- function(xy, t, bg,
                           iters = 1000, burn = iters/2, thin = 1,
-                          prior.shape.a = 1, prior.rate.a = 10,
-                          prior.shape.b = 1, prior.rate.b = 10,
+                          alpha.a = 1, alpha.b = 1, 
+                          hyper.alpha = 1, hyper.beta = 10,
                           tuner = c(0.1, 0.1, 1)
                           ){
   
@@ -38,8 +38,10 @@ RedBananaMCMC <- function(xy, t, bg,
   #======================================
   
   # Priors
-  a <- rgamma(1, prior.shape.a, prior.rate.a)
-  b <- rgamma(1, prior.shape.b, prior.rate.b)
+  beta.a <- rgamma(1, hyper.alpha , hyper.beta)
+  beta.b <- rgamma(1, hyper.alpha , hyper.beta)
+  a <- rgamma(1, alpha.a, beta.a)
+  b <- rgamma(1, alpha.b, beta.b)
   p <- runif(1)
   
   # Get interevent times
@@ -84,8 +86,8 @@ RedBananaMCMC <- function(xy, t, bg,
   #======================================
   # Keepers
   #======================================
-  keep.pars <- matrix(0, iters, 3)
-  colnames(keep.pars) <- c("a", "b", "p")
+  keep.pars <- matrix(0, iters, 5)
+  colnames(keep.pars) <- c("a", "b", "p", "beta.a", "beta.b")
   keep.ll <- rep(0, iters)
   
   
@@ -100,15 +102,17 @@ RedBananaMCMC <- function(xy, t, bg,
       #__________________________________
       # Update a
       #
+      new.beta.a <- rgamma(1, hyper.alpha + 1 * alpha.a ,  hyper.beta + a )
       cana <- exp(rnorm(1, log(a), tuner[1]))
       cantrigA <- cana*exp(-cana*iet)
       cantrig <- colSums(cantrigA*trigB, na.rm = T)
       canlam2 <- p*cantrig/pi
       cansumloglam <- sum(log(lam1 + canlam2))
 
-      Ratio.a <- cansumloglam - sumloglam + dgamma(cana, prior.shape.a, prior.rate.a, log = T) - dgamma(a, prior.shape.a, prior.rate.a, log = T)
+      Ratio.a <- cansumloglam - sumloglam + dgamma(cana, alpha.a, new.beta.a, log = T) - dgamma(a, alpha.a, beta.a, log = T)
     
       if(log(runif(1)) < Ratio.a){
+        beta.a <- new.beta.a
         a <- cana
         trigA <- cantrigA
         trig <- cantrig
@@ -121,15 +125,18 @@ RedBananaMCMC <- function(xy, t, bg,
       #__________________________________
       # Update b
       #
+      new.beta.b <- rgamma(1, hyper.alpha + 1 * alpha.b ,  hyper.beta + b )
+      
       canb <- exp(rnorm(1, log(b), tuner[2]))
       cantrigB <- canb*exp(-canb*ied2)
       cantrig <- colSums(trigA*cantrigB, na.rm = T)
       canlam2 <- p*cantrig/pi
       cansumloglam <- sum(log(lam1 + canlam2))
 
-      Ratio.b <- cansumloglam - sumloglam + dgamma(canb, prior.shape.b, prior.rate.b, log = T) - dgamma(b, prior.shape.b, prior.rate.b, log = T)
+      Ratio.b <- cansumloglam - sumloglam + dgamma(canb, alpha.b, new.beta.b, log = T) - dgamma(b, alpha.b, beta.b, log = T)
       
       if(log(runif(1)) < Ratio.b){
+        beta.b <- new.beta.b
         b <- canb
         trigB <- cantrigB
         trig <- cantrig
@@ -168,7 +175,7 @@ RedBananaMCMC <- function(xy, t, bg,
     #======================================
     # Keepers
     #======================================
-    keep.pars[i,] <- c(a,b,p)
+    keep.pars[i,] <- c(a,b,p,beta.a,beta.b)
     keep.ll[i] <- ll
     
     
@@ -188,10 +195,12 @@ RedBananaMCMC <- function(xy, t, bg,
     # Plots
     #======================================
     if(i%%100==0){
-      par(mfrow=c(2,2))
+      par(mfrow=c(3,2))
       plot(keep.pars[1:i,1], type = "s", main = "a")
       plot(keep.pars[1:i,2], type = "s", main = "b")
       plot(keep.pars[1:i,3], type = "s", main = "p")
+      plot(keep.pars[1:i,4], type = "s", main = "beta.a")
+      plot(keep.pars[1:i,5], type = "s", main = "beta.b")
       plot(keep.ll[1:i], type = "s", main = "log-likelihood")
     }
     
@@ -275,7 +284,7 @@ if(F){
   # for alpha
   plot(2501:5000,g$pars[2501:5000,1],type="s",main=bquote("Trace Plot of " ~ alpha),xlab="",ylab=bquote( ~ alpha))
   abline(h=mean(g$pars[2501:5000,1]),col="red")
-  hist(g$pars[2501:5000,1],main=bquote("Poterior of " ~ alpha),xlab="",col="skyblue")
+  hist(g$pars[2501:5000,1],main=bquote("Posterior of " ~ alpha),xlab="",col="skyblue")
   abline(v=mean(g$pars[2501:5000,1]),col="red")
   # for beta
   plot(2501:5000,g$pars[2501:5000,2],type="s",main=bquote("Trace Plot of " ~ beta),xlab="",ylab=bquote( ~ beta))
@@ -285,8 +294,18 @@ if(F){
   # for p
   plot(2501:5000,g$pars[2501:5000,3],type="s",main=bquote("Trace Plot of " ~ rho),xlab="",ylab=bquote( ~ rho))
   abline(h=mean(g$pars[2501:5000,3]),col="red")
-  hist(g$pars[2501:5000,3],main=bquote("Poterior of " ~ rho),xlab="",col="skyblue")
+  hist(g$pars[2501:5000,3],main=bquote("Posterior of " ~ rho),xlab="",col="skyblue")
   abline(v=mean(g$pars[2501:5000,3]),col="red")
+  # for beta.a
+  plot(2501:5000,g$pars[2501:5000,4],type="s",main=("Trace Plot of beta.a"),xlab="",ylab="beta.a")
+  abline(h=mean(g$pars[2501:5000,4]),col="red")
+  hist(g$pars[2501:5000,4],main=("Posterior of beta.a"),xlab="",col="skyblue")
+  abline(v=mean(g$pars[2501:5000,4]),col="red")
+  # for beta.b
+  plot(2501:5000,g$pars[2501:5000,5],type="s",main=("Trace Plot of beta.b"),xlab="",ylab="beta.b")
+  abline(h=mean(g$pars[2501:5000,5]),col="red")
+  hist(g$pars[2501:5000,5],main=("Posterior of beta.b"),xlab="",col="skyblue")
+  abline(v=mean(g$pars[2501:5000,5]),col="red")
   
   
   # calculating the standard deviation of parameters ( compared with MLE method)
@@ -294,12 +313,16 @@ if(F){
   sd(g$pars[2501:5000,1])
   sd(g$pars[2501:5000,2])
   sd(g$pars[2501:5000,3])
+  sd(g$pars[2501:5000,4])
+  sd(g$pars[2501:5000,5])
   
   
   # creditable intetval
   quantile(g$pars[,1],c(0.025,0.975))
   quantile(g$pars[,2],c(0.025,0.975))
   quantile(g$pars[,3],c(0.025,0.975))
+  quantile(g$pars[,4],c(0.025,0.975))
+  quantile(g$pars[,5],c(0.025,0.975))
   
 }
 
