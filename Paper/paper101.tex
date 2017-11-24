@@ -64,13 +64,17 @@
 \pdfpageheight 11in 
 \setlength{\textheight}{9in}
 
+%PLOTS
+\usepackage{graphicx} %for importing graphics files
+\usepackage{epstopdf}%for .eps files
+\graphicspath{{figures/}}
 
 % BIBLIOGRAPHY
 \usepackage[authoryear]{natbib}
 \bibpunct{(}{)}{;}{a}{}{,}
 %\linespread{1.5}
 
-\long\def\symbolfootnote[#1]#2{\begingroup%
+\long\def\symbolfootnote[#1]#2{\begingroup
 \def\thefootnote{\fnsymbol{footnote}}\footnote[#1]{#2}\endgroup}
 
 
@@ -343,7 +347,7 @@
 
 
 \title{\bf Bayesian Estimation of Modified ETAS Model for Invasive Species}
-\author{Earvin Balderama \and Binhui Deng}
+\author{Binhui Deng \and Earvin Balderama}
 %\date{}
 \maketitle
 
@@ -351,8 +355,12 @@
 %============================================
 %============================================
 \abstract{
-Abstract here.}
-%{\bf Keywords}: 
+
+Epidemic-Type Aftershock Sequence (ETAS) model, a spatial-temporal marked point process model, is widely used to forecast future sequent aftershock activities of earthquakes.
+Red banana trees, an invasive plant in Costa Rican rainforest, have been being observed for recent few years. Adjusted ETAS model was applied onto the study of red banana tree to characterize it’s spatial-temporal spreading patterns. 
+This project proposed Bayesian Markov Chain Monte Carlo method to estimate unknown parameters in the adjusted ETAS model.\\
+
+{\bf Keywords}: epidemic type aftershock sequence models, bayesian, MCMC, invasive species
 %============================================
 %============================================
 
@@ -361,18 +369,20 @@ Abstract here.}
 \section{Introduction}
 %============================================
 
-Invasive alien species of plants can destroy the habitat of native species and disturb the natural evolution that takes place in the environment in which they spread. Many invasive plant species have been studied in the past \citep{Higgins96,Delisle03}. Too many of these studies simply report statistics based on amount of land consumed over some period of time. Of these, most do not report precise locations where these plants are spreading. There are a couple of reasons why this is the case: 1) Computational methods are either too simple or too difficult, and 2) Data on the invasive species do not contain exact locations of each individual plant. Even when trying to analyze the current and future locations of invasive plants, the models do not come from point process methodology. Instead, studies often use grid-based methods, where the surface of study is divided into an array of pixels on a grid.
+Invasive species is a subset of introduced species. It would be defined as an invasive species if a species is artificially introduced into a region that it has not previously existed and has the capacity to grow into a certain amount in the absence of human intervention, then threaten local biodiversity and become a local hazard.
 
-The natural process by which plants can spread its seeds initiates the conversation of statistically analyzing the spatial and temporal spread of invasive plants using the theory of point processes.
+Invasive alien species of plants can also destroy the habitat of native species and disturb the natural evolution that takes place in the environment in which they spread. Many invasive plant species have been studied in the past \citep{Higgins96,Delisle03}. Too many of these studies simply report statistics based on amount of land consumed over some period of time. Of these, most do not report precise locations where these plants are spreading. There are a couple of reasons why this is the case: 1) Computational methods are either too simple or too difficult, and 2) Data on the invasive species do not contain exact locations of each individual plant. Even when trying to analyze the current and future locations of invasive plants, the models do not come from point process methodology. Instead, studies often use grid-based methods, where the surface of study is divided into an array of pixels on a grid.
 
+The natural process by which plants can spread its seeds initiates the conversation of statistically analyzing the spatial and temporal spread of invasive plants using the theory of point processes. According to the former research done by Dr. Earvin Balderama, the estimates obtained by Newton-Rhapson numerical optimization were $\boldsymbol{\hat\theta} = \{\hat\alpha = 0.0760, \hat\beta = 0.0292, \hat p = 0.5770\}$, with corresponding asymptotic standard errors 0.0045, 0.0022 and 0.0190, respectively. 
 
+The Bayesian MCMC algorithm was of interest to retrospectively examine if more accurate estimates could be obtained and if the estimates are robust.
 %============================================
 \section{Data}
 %============================================
 
 
 
-The data studied in \cite{Balderama12} contained the precise longitude and latitude coordinates, captured by GPS, of red banana trees that has spread through a significant part of a rainforest in Costa Rica. In addition to location, the height (in cm) and other variables of each tree was also measured. With the information available, it was then easy to map the trees as a spatial point process. Note that there is no need to use the height variable to create a {\it marked} spatial point process, because these marks will offer no direct knowledge on how these plants are spreading. Instead, because of the partial dependency of age as it relates to the height of a tree, birth times of the red bananas were estimated, allowing for a temporal analysis of spread.
+The data studied in \cite{Balderama12} contained the precise longitude and latitude coordinates, captured by Global Position System (GPS), of red banana trees that has spread through a significant part of a rainforest in Costa Rica. In addition to location, the height (in cm) and other variables of each tree was also measured. With the information available, it was then easy to map the trees as a spatial point process. Note that there is no need to use the height variable to create a {\it marked} spatial point process, because these marks will offer no direct knowledge on how these plants are spreading. Instead, because of the partial dependency of age as it relates to the height of a tree, birth times of the red banana trees were estimated, allowing for a temporal analysis of spread.
 
 
 We use the red banana data from \cite{Balderama12}. Heights (in cm) of 1008 red banana plants were observed and longitude and latitude coordinates were recorded by satellite. The heights of 318 select plants were measured weekly over a span of one year. To establish a time component, estimates of the growth rate was used to estimate any individual plant's age, and hence origin times. In the end, 788 plants had complete location and origin times data, and were used for the subsequent analyses.
@@ -395,14 +405,46 @@ where $\frac{\alpha\beta}{\pi}$ is a normalizing constant so that $g$ integrates
 \begin{equation}\label{etasplants}
 \lambda(t,x,y | H_t) = (1-p)\mu(x,y) + \dfrac{p \alpha \beta}{\pi} \sum_{\{i:t_i < t\}} e^{-\alpha (t-t_i) - \beta\{(x-x_i)^2+(y-y_i)^2\}}
 \end{equation}
-where $p$ is introduced to specify the proportion of events that were triggered, leading to a simultaneous estimation of the parameter vector $\boldsymbol{\theta} = \{\alpha, \beta, p\}$ by maximizing the log-likelihood
+where $p$ is introduced to specify the proportion of events that were triggered, leading to a simultaneous estimation of the parameter vector $\boldsymbol{\theta} = \{\alpha, \beta, p\}$ by utilizing Bayesian Markov Chain Monte Carlo algorithm. Both $\alpha$ and $\beta$ are parameters should be greater than zero, the prior distributions for them were then set to be Gamma($\alpha_a$, $\beta_a$) and Gamma($\alpha_b$, $\beta_b$), respectively, where $\alpha_a$ and $\alpha_b$ were set to be 1, and $\beta_a$ and $\beta_b$ had uninformative hyper prior distributions, Gamma($\alpha_{hyper}$, $\beta_{hyper}$), where $\alpha_{hyper}$=$\beta_{hyper}$=0.5. For parameter $p$, which indicates an unknown proportion, should range between 0 and 1, so Uniform(0,1) was set as the prior distribution. The log-likelihood was then specified as
 \begin{equation}
 logL = \sum_{i=1}^{n} log\lambda(t_i,x_i,y_i) - \iint_A \int_{0}^{\infty}\lambda(t,x,y)dtdxdy.
 \end{equation}
 
-The estimates obtained by Newton-Rhapson numerical optimization were $\boldsymbol{\hat\theta} = \{\hat\alpha = 0.0760, \hat\beta = 0.0292, \hat p = 0.5770\}$, with corresponding asymptotic standard errors 0.0045, 0.0022 and 0.0190, respectively. It is worth noting that this space-time modification does not contain magnitude information, as is the case for earthquakes, and that the dependence on time $t$ is removed from the estimation of the background rate, as is also the case with Ogata's ETAS models. Furthermore, this model was empirically fitted using the red banana data, and is therefore another case of a self-excited Hawkes' point process. A different species of plants may require not only different estimates of the parameters, but possibly a different set of parameters altogether, depending on the spatial and temporal distributions of interevent distances and times. However, it was the first attempt at using ETAS models to characterize the branching structure of invasive plant species.
+The symmetric proposal distributions for $\alpha$ and $\beta$ were set to be Normal($\alpha^{(t-1)}$,0.1) and Normal($\beta^{(t-1)}$,0.1) respectively, and the asymmetric proposal distribution for paramater $p$ is Beta($p^{(t-1)}$,$1-p^{(t-1)}$), which has mean of $p^{(t-1)}$. The symbols $\alpha^{(t-1)}$, $\beta^{(t-1)}$ and $p^{(t-1)}$ represent the current values of parameters. 
+
+Because hyper prior distributions are conjugate priors, candidates of $\beta_a$ and $\beta_b$ were directly updated from their posterior distributions, $Gamma(\alpha_{hyper}+n\alpha_a, \beta_{hyper}+\textstyle \sum _{i=1}^n \alpha )$ and $Gamma(\alpha_{hyper}+n\alpha_b, \beta_{hyper}+\textstyle \sum _{i=1}^n \beta )$. Potential candidates of parameters would be drawn from proposal distributions and be updated by using Metropolis-Hastings ratio technique, which is specified as
+\begin{equation}
+R = \frac{p(\theta^{(c)}|y)}{p(\theta^{(t-1)}|y)},
+\end{equation}
+where $\theta^{(c)}$ represents the candidate parameter and $\theta^{(t-1)}$ indicates the current parameter. The parameter $\theta^{(t)}$ would be updated to $\theta^{(c)}$ at certain probability or remain as $\theta^{(t-1)}$.
+
+After the Bayesian MCMC algorithm, 50,000 potential candidates for each parameter were recorded. Thining technique was applied, which discarded all but $10^{th}$ observations to get rid of autocorrelation to guarantee the independecy of samples, and 5,000 observations were left. Burning technique was then utilized, which threw away first 2,500 observations to minimize the effect of initial values on the posterior inference.
+Tuning technique was applied as well, which controlled the acceptence rate in a desired range, 25\% to 60\%. Bayesian inferences were then conducted based on the final 2,500 observations.  
 
 
+
+
+
+
+
+%========================
+\section{Results}
+%========================
+
+The trace plot and posterior histogram for each parameter are shown as below 
+
+%  \includegraphics[scale=0.01]{Plot of redbanana.png}
+\textcolor{blue}{insert "traceplot" and "posterior histogram" here}
+
+The estimates obtained by Bayesian MCMC algorithm were $\boldsymbol{\hat\theta} = \{\hat\alpha = 0.0747, \hat\beta = 0.0203, \hat p = 0.6062\}$, with corresponding posterior standard deviations 0.0045, 0.0017 and 0.01941, respectively. These estimates are used to explain the decay rates of triggering events, where $\hat\alpha = 0.0747$ represents the intensity of trggering events decays at a a rate of $1-e^{-0.0747}=7.198\%$ for every week that passes, $\hat\beta = 0.0203$ suggests that the intensity of trggering events decays at a a rate of $1-e^{-0.0203}=2.1\%$ for every squared distance (in meters) away and $\hat\rho = 0.6062$ indicates that 60.62\% of events were triggered by observed plants and 39.38\% is due to the background rate (i.e., unobserved plants or other unknown sources). It is worth noting that this space-time modification does not contain magnitude information, as is the case for earthquakes, and that the dependence on time $t$ is removed from the estimation of the background rate, as is also the case with Ogata's ETAS models.
+
+The estimates from Bayesian MCMC are very close to the ones from Newton-Rhapson numerical optimization, and the posterior standard deviations are smaller than asymptotic standard errors for most of time.
+
+Below are three simulations of the spreading pattern of red banana plants by using the modified ETAS model with bayesian estimates.
+
+\textcolor{blue}{insert "simulations" here}
+
+ Furthermore, this model was empirically fitted using the red banana data, and is therefore another case of a self-excited Hawkes' point process. A different species of plants may require not only different estimates of the parameters, but possibly a different set of parameters altogether, depending on the spatial and temporal distributions of interevent distances and times. However, it was the first attempt at using ETAS models to characterize the branching structure of invasive plant species.
 
 \bibliographystyle{asa}
 \bibliography{earvin2}
