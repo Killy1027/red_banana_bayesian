@@ -356,8 +356,8 @@
 %============================================
 \abstract{
 
-Epidemic-Type Aftershock Sequence (ETAS) model, a spatial-temporal marked point process model, is widely used to forecast future sequent aftershock activities of earthquakes.
-Red banana trees, an invasive plant in Costa Rican rainforest, have been being observed for recent few years. Adjusted ETAS model was applied onto the study of red banana tree to characterize it’s spatial-temporal spreading patterns. 
+The Epidemic-Type Aftershock Sequence (ETAS) model, a \cite{Hawkes71} self-exciting point process model, is commonly used for characterizing earthquake and aftershock activity.
+Red banana trees, an invasive plant in Costa Rican rainforest, have been being observed for recent few years. Adjusted ETAS model was applied onto the study of red banana tree to characterize it's spatial-temporal spreading patterns. 
 This project proposed Bayesian Markov Chain Monte Carlo method to estimate unknown parameters in the adjusted ETAS model.\\
 
 {\bf Keywords}: epidemic type aftershock sequence models, bayesian, MCMC, invasive species
@@ -387,13 +387,19 @@ The data studied in \cite{Balderama12} contained the precise longitude and latit
 
 We use the red banana data from \cite{Balderama12}. Heights (in cm) of 1008 red banana plants were observed and longitude and latitude coordinates were recorded by satellite. The heights of 318 select plants were measured weekly over a span of one year. To establish a time component, estimates of the growth rate was used to estimate any individual plant's age, and hence origin times. In the end, 788 plants had complete location and origin times data, and were used for the subsequent analyses.
 
+\bfig\centering
+\includegraphics[width=5cm]{figures/redbanana.png}
+\caption{}
+\label{Map1}
+\efig
+
 %============================================
 \section{Methods}
 %============================================
 
 Ogata's epidemic-type aftershock sequence models \citep{Ogata88,Ogata98} is one of the most popular models of earthquake occurrences. The ETAS model is so aptly names because of the epidemic nature of how events are created; Earthquakes causes aftershocks, which in turn causes more aftershocks, and so on. It characterizes a sequence of earthquakes and aftershocks over time or over space and time via a conditional intensity, which represents the infinitesimal probability of an event occurrence at a single point in $\real{R}^d$ given the past history of the process. This particular characterization of a sequence of earthquakes and aftershocks is a specific case of the linear, self-exciting Hawkes' point process \citep{Hawkes71}, which is specified by the conditional intensity
 \begin{equation}\label{hawkes}
-\lambda(t, Q | H_t) = \mu(t,Q) + \sum_{t_i < t} g(t,Q; t_i, Q_i),
+\lambda(t, Q \cond H_t) = \mu(t,Q) + \sum_{t_i < t} g(t,Q; t_i, Q_i),
 \end{equation}
 where $Q$ is additional information that may include a spatial component $(x,y)$ and/or a mark or magnitude $M$, $H_t$ is the history of the process up to time $t$, $\mu(\cdot)$ is the mean rate of a Poisson-distributed background process that may depend on time, space and magnitude, and $g(\cdot)$ is the ``triggering function" which contributes the individual intensities of each point $\{i: t_i < t\}$ as a summation to the total conditional intensity $\lambda(\cdot)$ at time $t$. Thus, every past event has an additive (linear) influence on the present conditional intensity of the system.
 
@@ -431,18 +437,32 @@ Tuning technique was applied as well, which controlled the acceptence rate in a 
 \section{Results}
 %========================
 
-The trace plot and posterior histogram for each parameter are shown as below 
+The trace plot and posterior histogram for each parameter are shown in Figure~\ref{Post1}. 
 
-%  \includegraphics[scale=0.01]{Plot of redbanana.png}
-\textcolor{blue}{insert "traceplot" and "posterior histogram" here}
+\bfig\centering
+\includegraphics[width=4cm]{figures/gamma0505/a_trace.png}
+\includegraphics[width=4cm]{figures/gamma0505/b_trace.png}
+\includegraphics[width=4cm]{figures/gamma0505/p_trace.png}\\
+\includegraphics[width=4cm]{figures/gamma0505/a_hist.png}
+\includegraphics[width=4cm]{figures/gamma0505/b_hist.png}
+\includegraphics[width=4cm]{figures/gamma0505/p_hist.png}
+\caption{}
+\label{Post1}
+\efig
 
 The estimates obtained by Bayesian MCMC algorithm were $\boldsymbol{\hat\theta} = \{\hat\alpha = 0.0747, \hat\beta = 0.0203, \hat p = 0.6062\}$, with corresponding posterior standard deviations 0.0045, 0.0017 and 0.01941, respectively. These estimates are used to explain the decay rates of triggering events, where $\hat\alpha = 0.0747$ represents the intensity of trggering events decays at a a rate of $1-e^{-0.0747}=7.198\%$ for every week that passes, $\hat\beta = 0.0203$ suggests that the intensity of trggering events decays at a a rate of $1-e^{-0.0203}=2.1\%$ for every squared distance (in meters) away and $\hat\rho = 0.6062$ indicates that 60.62\% of events were triggered by observed plants and 39.38\% is due to the background rate (i.e., unobserved plants or other unknown sources). It is worth noting that this space-time modification does not contain magnitude information, as is the case for earthquakes, and that the dependence on time $t$ is removed from the estimation of the background rate, as is also the case with Ogata's ETAS models.
 
 The estimates from Bayesian MCMC are very close to the ones from Newton-Rhapson numerical optimization, and the posterior standard deviations are smaller than asymptotic standard errors for most of time.
 
-Below are three simulations of the spreading pattern of red banana plants by using the modified ETAS model with bayesian estimates.
+Figure~\ref{Sims1} show three simulations of the spreading pattern of red banana plants by using the modified ETAS model with Bayesian estimates.
 
-\textcolor{blue}{insert "simulations" here}
+\bfig\centering
+\includegraphics[width=4cm]{figures/simulation1.png}
+\includegraphics[width=4cm]{figures/simulation2.png}
+\includegraphics[width=4cm]{figures/simulation3.png}
+\caption{}
+\label{Sims1}
+\efig
 
  Furthermore, this model was empirically fitted using the red banana data, and is therefore another case of a self-excited Hawkes' point process. A different species of plants may require not only different estimates of the parameters, but possibly a different set of parameters altogether, depending on the spatial and temporal distributions of interevent distances and times. However, it was the first attempt at using ETAS models to characterize the branching structure of invasive plant species.
 
