@@ -278,7 +278,7 @@ if(F){
   lon <- range(redbanana$longitude)
   lat <- range(redbanana$latitude)
   Costa_Rica <- get_map(location=c(lon=mean(lon),lat=mean(lat)),zoom=15)
-  ggmap(Costa_Rica,extent="device")+geom_point(data=redbanana,aes(x=longitude,y=latitude),col="deeppink2")
+  ggmap(Costa_Rica,extent="device")+geom_point(data=redbanana,aes(x=longitude,y=latitude),size=4,shape=1,stroke=1,col="deeppink2")
   
   
   # for alpha

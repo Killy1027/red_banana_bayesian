@@ -120,9 +120,9 @@ if(F){
   sim2 <- sim_rb_etas(theta, max(redbanana$birth), bg)
   sim3 <- sim_rb_etas(theta, max(redbanana$birth), bg)
   par(pty="s")
-  plot(sim1$pts,xlim=range(bg$x),ylim=range(bg$y),main="Simulation 1", pch=19,col="deeppink1",cex=0.4)
-  plot(sim2$pts,xlim=range(bg$x),ylim=range(bg$y),main="Simulation 2", pch=19,col="deeppink1",cex=0.4)
-  plot(sim3$pts,xlim=range(bg$x),ylim=range(bg$y),main="Simulation 3", pch=19,col="deeppink1",cex=0.4)
+  plot(sim1$pts,xlim=range(bg$x),ylim=range(bg$y), pch=1,col="deeppink1",cex=2.4,lwd=2)
+  plot(sim2$pts,xlim=range(bg$x),ylim=range(bg$y), pch=1,col="deeppink1",cex=2.4,lwd=2)
+  plot(sim3$pts,xlim=range(bg$x),ylim=range(bg$y), pch=1,col="deeppink1",cex=2.4,lwd=2)
   
   par(mfrow=c(1,2))
   plot(redbanana$longitude,redbanana$latitude,pch=".",main="observed")
